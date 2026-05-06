@@ -3,55 +3,63 @@ import java.util.HashMap;//导入HashMap类
 
 public class MyHashMap {
     public static void main(String[] args) {
-        /*
-        HashMap的putAll();方法
-         */
         // 1. 创建第一个 HashMap (目标 Map)
-        Map<String, Integer> map1 = new HashMap<>();
-        map1.put("Java", 1);
-        map1.put("Python", 2);
-
-        System.out.println("合并前的 map1: " + map1);
-
-        // 2. 创建第二个 HashMap
-        Map<String, Integer> map2 = new HashMap<>();
-        map2.put("C++", 3);
-        map2.put("Java", 4); // 注意：这里也有 "Java" 这个键，值不同
-
-        // 3. 使用 putAll() 方法，将 map2 的内容合并到 map1 中
-        map1.putAll(map2);
-
-        // 4. 打印合并后的结果
-        System.out.println("合并后的 map1: " + map1);
-
-        //5.测试get方法获取不存在的Key值
-        Integer score = map2.get("Python");
-        System.out.println("score is "+score);
+        Map<String, Integer> map = new HashMap<>();
+        map.put("Java", 1);
+        map.put("Python", 2);
 
 
-        /*
-        HashMap的遍历
-         */
-        //1.entrySet();方法
-        System.out.println("map1 is "+ map1);
-        System.out.println("Set view is " + map1.entrySet());//Set视图:Hashset每一个键对值都被视为一个Set
-        //foreach与entrySet()搭配遍历
-        for(Map.Entry<String,Integer> entry : map1.entrySet()){
-            String key = entry.getKey();
-            Integer value = entry.getValue();
-            System.out.println("entryKey is "+key+"  entryValue is "+value);
-        }
-
-        //2.foreach()方法+Lambada表达式
-        map1.forEach((key,value)-> System.out.println("key is "+key+"  value is "+value));
-
-         /*
-        HashMap的getOrDefault();方法
-         */
-        int value = map2.getOrDefault("Java",-1);
-        System.out.println("Java's value in map2 is " + value);
 
     }
+//        /*
+//        HashMap的putAll();方法
+//         */
+//        // 1. 创建第一个 HashMap (目标 Map)
+//        Map<String, Integer> map1 = new HashMap<>();
+//        map1.put("Java", 1);
+//        map1.put("Python", 2);
+//
+//        System.out.println("合并前的 map1: " + map1);
+//
+//        // 2. 创建第二个 HashMap
+//        Map<String, Integer> map2 = new HashMap<>();
+//        map2.put("C++", 3);
+//        map2.put("Java", 4); // 注意：这里也有 "Java" 这个键，值不同
+//
+//        // 3. 使用 putAll() 方法，将 map2 的内容合并到 map1 中
+//        map1.putAll(map2);
+//
+//        // 4. 打印合并后的结果
+//        System.out.println("合并后的 map1: " + map1);
+//
+//        //5.测试get方法获取不存在的Key值
+//        Integer score = map2.get("Python");m
+//        System.out.println("score is "+score);
+//
+//
+//        /*
+//        HashMap的遍历
+//         */
+//        //1.entrySet();方法
+//        System.out.println("map1 is "+ map1);
+//        System.out.println("Set view is " + map1.entrySet());//Set视图:Hashset每一个键对值都被视为一个Set
+//        //foreach与entrySet()搭配遍历
+//        for(Map.Entry<String,Integer> entry : map1.entrySet()){
+//            String key = entry.getKey();
+//            Integer value = entry.getValue();
+//            System.out.println("entryKey is "+key+"  entryValue is "+value);
+//        }
+//
+//        //2.foreach()方法+Lambada表达式
+//        map1.forEach((key,value)-> System.out.println("key is "+key+"  value is "+value));
+//
+//         /*
+//        HashMap的getOrDefault();方法
+//         */
+//        int value = map2.getOrDefault("Java",-1);
+//        System.out.println("Java's value in map2 is " + value);
+//
+//    }
 
 
     /*
