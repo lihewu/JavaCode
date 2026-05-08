@@ -8,7 +8,14 @@ public class MyString {
         //通过new来创建Stirng
         String str2 = new String("new lihewu");
         for(char i : str.toCharArray()){
-            System.out.println(i);
+            System.out.print(i );
         }
+        System.out.println();
+
+        //charAt();
+        System.out.println(str.charAt(2));
+
+        //toUpperCase()
+        System.out.println(str.toUpperCase());
     }
 }
