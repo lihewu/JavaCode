@@ -13,6 +13,11 @@ public class MyString {
             System.out.println(s1);
         }
 
+        String str2 = "    中文空格   ";
+        System.out.println(str2);
+        str2 = str2.trim();
+        System.out.println(str2);
+
     }
 
 
