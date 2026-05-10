@@ -1,64 +1,149 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Stack;
 
-class Solution{
-    /**
-     * 不使用Java内置方法实现
-     * <p>
-     * 1.去除首尾以及中间多余空格
-     * 2.反转整个字符串
-     * 3.反转各个单词
-     */
-    public String reverseWords(String s){
-        //1.去除多余空格
-        StringBuilder sb = removeSpace(s);
-        //2.逆置整个String
-        reverseString(sb,0,sb.length()-1);
-        //3.逆置单词
-        reverseEachWords(sb);
+
+/**
+ * 1047. 删除字符串中的所有相邻重复项
+ * 给出由小写字母组成的字符串 s，重复项删除操作会选择两个相邻且相同的字母，并删除它们。
+ * 在 s 上反复执行重复项删除操作，直到无法继续删除。
+ * 在完成所有重复项删除操作后返回最终的字符串。答案保证唯一
+ */
+
+
+class Solution {
+    public String removeDuplicates(String s) {
+        //StringBuilder天然的尾插特性，使得其可以充当栈来使用
+        StringBuilder sb = new StringBuilder();
+        char[] ch = s.toCharArray();
+        for(int i = 0; i < s.length(); i++){
+            if(sb.isEmpty() || sb.charAt(sb.length()-1) != ch[i]){
+                sb.append(ch[i]);
+            }else{
+                sb.deleteCharAt(sb.length()-1);
+            }
+        }
         return sb.toString();
     }
-
-    public StringBuilder removeSpace(String s){//去除多余空格
-        int start = 0; int end = s.length()-1;
-        char[] ch = s.toCharArray();
-        while(ch[start] == ' '){start++;}//去除首部空格
-        while(ch[end] == ' '){end--;}//去除尾部空格
-
-        StringBuilder sb = new StringBuilder();
-        while(start <= end){//去除重复的空格
-            if(ch[start] != ' ' || sb.charAt(sb.length()-1)!=' '){//只有当读取到' '且sb末尾已经为' '时才不会读取
-                sb.append(ch[start]);
-            }
-            start++;
-        }
-        return sb;
-    }
-
-    public void reverseString(StringBuilder sb, int start, int end){//逆置字符串
-        char temp;
-        while(start < end){
-            temp = sb.charAt(start);
-            sb.setCharAt(start,sb.charAt(end));
-            sb.setCharAt(end,temp);
-            start++;
-            end--;
-        }
-    }
-
-    private void reverseEachWords(StringBuilder sb){
-        int start = 0;int end = 1;
-        while(start < sb.length()){//外层循环
-            while(end < sb.length() && sb.charAt(end) != ' '){//找到end的位置
-                end++;
-            }//此时end == ' '
-            reverseString(sb,start,end-1);
-            start = end+1;
-            end = start+1;
-        }
-    }
 }
+
+
+//class Solution {
+//    public String removeDuplicates(String s) {
+//        Stack<Character> stack = new Stack<>();
+//        char[] ch = s.toCharArray();
+//        for(int i = 0; i < ch.length; i++){
+//            if(stack.isEmpty() || ch[i] != stack.peek()){
+//                stack.push(ch[i]);
+//            }else if(ch[i] == stack.peek()){
+//                stack.pop();
+//            }
+//        }
+//        StringBuilder sb = new StringBuilder();
+//        while(!stack.isEmpty()){
+//            sb.append(stack.pop());
+//        }
+//        sb.reverse();
+//        return sb.toString();
+//    }
+//}
+
+
+
+
+
+
+
+/**
+ * LeetCode.20.有效括号
+ */
+
+//class Solution {
+//    public boolean isValid(String s) {
+//        Stack<Character> stack = new Stack<>();
+//        char[] ch = s.toCharArray();
+//        for(int i = 0; i < ch.length; i++){
+//            if(ch[i] == '(' || ch[i] == '{' || ch[i] == '['){//如果是左括号，入栈
+//                stack.add(ch[i]);
+//            }else{//如果为右括号
+//                if(stack.isEmpty()) return false;//如果此时站内无元素，匹配失败
+//                if(ch[i] == ')'){
+//                    if(stack.peek() == '(') stack.pop();
+//                    else return false;
+//                }else if(ch[i] == '}'){
+//                    if(stack.peek() == '{') stack.pop();
+//                    else return false;
+//                }else{
+//                    if(ch[i] == ']'){
+//                        if(stack.peek() == '[') stack.pop();
+//                        else return false;
+//                    }
+//                }
+//            }
+//        }
+//
+//        return stack.isEmpty();
+//    }
+//}
+
+//class Solution{
+//    /**
+//     * 不使用Java内置方法实现
+//     * <p>
+//     * 1.去除首尾以及中间多余空格
+//     * 2.反转整个字符串
+//     * 3.反转各个单词
+//     */
+//    public String reverseWords(String s){
+//        //1.去除多余空格
+//        StringBuilder sb = removeSpace(s);
+//        //2.逆置整个String
+//        reverseString(sb,0,sb.length()-1);
+//        //3.逆置单词
+//        reverseEachWords(sb);
+//        return sb.toString();
+//    }
+//
+//    public StringBuilder removeSpace(String s){//去除多余空格
+//        int start = 0; int end = s.length()-1;
+//        char[] ch = s.toCharArray();
+//        while(ch[start] == ' '){start++;}//去除首部空格
+//        while(ch[end] == ' '){end--;}//去除尾部空格
+//
+//        StringBuilder sb = new StringBuilder();
+//        while(start <= end){//去除重复的空格
+//            if(ch[start] != ' ' || sb.charAt(sb.length()-1)!=' '){//只有当读取到' '且sb末尾已经为' '时才不会读取
+//                sb.append(ch[start]);
+//            }
+//            start++;
+//        }
+//        return sb;
+//    }
+//
+//    public void reverseString(StringBuilder sb, int start, int end){//逆置字符串
+//        char temp;
+//        while(start < end){
+//            temp = sb.charAt(start);
+//            sb.setCharAt(start,sb.charAt(end));
+//            sb.setCharAt(end,temp);
+//            start++;
+//            end--;
+//        }
+//    }
+//
+//    private void reverseEachWords(StringBuilder sb){
+//        int start = 0;int end = 1;
+//        while(start < sb.length()){//外层循环
+//            while(end < sb.length() && sb.charAt(end) != ' '){//找到end的位置
+//                end++;
+//            }//此时end == ' '
+//            reverseString(sb,start,end-1);
+//            start = end+1;
+//            end = start+1;
+//        }
+//    }
+//}
 
 /**
  * LeetCode 151 反转字符串中的words
