@@ -1,7 +1,143 @@
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Stack;
+import java.util.*;
+//import java.util.Stack;//最垃圾的类，没用之一
+
+
+/**
+ * 347.前K个高频元素
+ * 给你一个整数数组 nums 和一个整数 k ，请你返回其中出现频率前 k 高的元素。你可以按 任意顺序 返回答案。
+ */
+
+//做前猜想:和上一题应该不同，上一题需要存储下标位置来判断生命周期;
+// 本体需要记录元素出现频率，出现频率应该是Map而不是Set(是否存在过)
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer,Integer> map = new HashMap<>();//Key-Value值为元素-次数
+        //优先级队列，并且通过Lambda表达式修改为大根堆
+        //这里也可以用int[] 来从当pq元素
+        PriorityQueue<Map.Entry<Integer,Integer>> pq = new PriorityQueue<>((e1,e2)-> e1.getValue() - e2.getValue());
+        for(int i : nums){//先通过遍历,将每个元素的出现次数put到map中
+            map.put(i,map.getOrDefault(i,0)+1);
+        }
+        for(var i : map.entrySet()){//注:var是JDK10引入的局部变量解析，会自动识别数据类型（Map.Entry<Integer, Integer>）
+            pq.offer(i);//将一整行数据项(map.entry)塞入队列中
+            if(pq.size() > k){//大根堆，前K个即为最高频率的k个元素
+                pq.poll();
+            }
+        }
+        //此时pq只保留了最高频率的k个元素
+        int[] ret = new int[k];
+        for(int i = 0; i < k; i++){
+            ret[i] = pq.remove().getKey();
+        }
+        return ret;
+    }
+}
+
+
+/**
+ * 239.滑动窗口最大值
+ * 给你一个整数数组 nums，有一个大小为 k 的滑动窗口从数组的最左侧移动到数组的最右侧。
+ * 你只可以看到在滑动窗口内的 k 个数字。滑动窗口每次只向右移动一位。
+ * 返回 滑动窗口中的最大值 。
+ */
+
+//class Solution {
+//    public int[] maxSlidingWindow(int[] nums, int k) {
+//        if(nums == null || nums.length == 0) return new int[0];
+//        int[] ret = new int[nums.length - k + 1];
+//        int index = 0;//用于记录ret的位置
+//        //利用双端队列实现单调队列
+//        //tips:队列存储的是下标元素
+//        Deque<Integer> deque = new ArrayDeque<>();
+//
+//        //这个世界从不记得谁活最久，只记得每个窗口滑过时，最前面那个杀红了眼的人
+//        for(int i  = 0; i < nums.length; i++){
+//            //1.淘汰永远当不了最大值的dinner
+//            while(!deque.isEmpty() && nums[i] >= nums[deque.peekLast()]){//牢记deque中存储的全是下标值i
+//                deque.removeLast();
+//            }
+//            //2.新王登基，比我弱的和一样的都杀完了，剩下的只有比我强的
+//            deque.add(i);//记录坐标
+//
+//            //3.你只不过是生在没有我的时代罢了，史上最强 VS 现代最强
+//            if(deque.element() < i + 1 - k){//历代最强只能活到 滑动窗口的左边界，即 i - k
+//                deque.removeFirst();
+//            }
+//
+//            if(i >= k - 1){
+//                ret[index++] = nums[deque.element()];//牢记deque中存储的全是下标值i
+//            }
+//        }
+//        return ret;
+//    }
+//}
+
+
+//class Solution {
+//    public int[] maxSlidingWindow(int[] nums, int k) {
+//        int[] ret = new int[nums.length - k + 1];
+//        int index = 0;//用来记录ret的位置
+//        //本质:利用双端队列实现单调栈
+//        Deque<Integer> deque = new ArrayDeque<>();//双端队列
+//
+//        for (int i = 0; i < nums.length; i++){
+//            while(deque.isEmpty() || nums[i] > deque.peekFirst()){//如果栈为空或者新元素比栈首元素还要大，则头插
+//                deque.addFirst(nums[i]);
+//            }
+//            while(!deque.isEmpty() && nums[i] > deque.peekLast()){//如果只大于尾部元素，淘汰尾部元素
+//                deque.removeLast();
+//                deque.addLast(nums[i]);
+//            }
+//
+            //错误❌
+            //怎么可能直接出掉最大值啊，你个傻逼，你写滑动窗口给我写好的啊我chovy，顶部的最大值还可能是后续的最大值呢？
+            //顶部元素的生命周期单独记录
+//            if(i >= k-1){//从pos = k-1开始，每次出栈顶元素
+//                ret[index++] = deque.pop();
+//            }
+//        }
+//        return ret;
+//    }
+//}
+
+
+/**
+ * 150. 逆波兰表达式求值
+ * 给你一个字符串数组 tokens ，表示一个根据 逆波兰表示法 表示的算术表达式。
+ * 请你计算该表达式。返回一个表示表达式值的整数。
+ * 有效的算符为 '+'、'-'、'*' 和 '/'
+ */
+
+//class Solution {
+//    public int evalRPN(String[] tokens) {
+//        //Stack效率极低，可以用Deque实现栈的功能
+//        // Stack<String> stack = new Stack<>();
+//        Deque<Integer> stack = new ArrayDeque<>();//ArrayDeque更强更快！
+//
+//        for(String str : tokens){//遍历tokens数组
+//            if(str.equals("+")){
+//                int right = stack.pop();
+//                int left = stack.pop();
+//                stack.push(left+right);
+//            } else if (str.equals("-")) {
+//                int right = stack.pop();
+//                int left = stack.pop();
+//                stack.push(left-right);
+//            } else if (str.equals("*")) {
+//                int right = stack.pop();
+//                int left = stack.pop();
+//                stack.push(left*right);
+//            } else if (str.equals("/")) {
+//                int right = stack.pop();
+//                int left = stack.pop();
+//                stack.push(left/right);
+//            } else {
+//                stack.push(Integer.valueOf(str));
+//            }
+//        }
+//        return stack.pop();
+//    }
+//}
 
 
 /**
@@ -12,21 +148,21 @@ import java.util.Stack;
  */
 
 
-class Solution {
-    public String removeDuplicates(String s) {
-        //StringBuilder天然的尾插特性，使得其可以充当栈来使用
-        StringBuilder sb = new StringBuilder();
-        char[] ch = s.toCharArray();
-        for(int i = 0; i < s.length(); i++){
-            if(sb.isEmpty() || sb.charAt(sb.length()-1) != ch[i]){
-                sb.append(ch[i]);
-            }else{
-                sb.deleteCharAt(sb.length()-1);
-            }
-        }
-        return sb.toString();
-    }
-}
+//class Solution {
+//    public String removeDuplicates(String s) {
+//        //StringBuilder天然的尾插特性，使得其可以充当栈来使用
+//        StringBuilder sb = new StringBuilder();
+//        char[] ch = s.toCharArray();
+//        for(int i = 0; i < s.length(); i++){
+//            if(sb.isEmpty() || sb.charAt(sb.length()-1) != ch[i]){
+//                sb.append(ch[i]);
+//            }else{
+//                sb.deleteCharAt(sb.length()-1);
+//            }
+//        }
+//        return sb.toString();
+//    }
+//}
 
 
 //class Solution {
