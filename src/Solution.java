@@ -1,5 +1,104 @@
 import java.util.*;
-//import java.util.Stack;//最垃圾的类，没用之一
+//import java.util.Stack;//最垃圾的类，没有之一
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+// */
+
+/**
+ * 二叉树自底向上层序遍历
+ */
+
+class Solution {
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+
+    }
+}
+
+/**
+ * 二叉树层序遍历
+ */
+//迭代实现——借助队列
+//class Solution{
+//
+//    public List<List<Integer>> levelOrder(TreeNode root){
+//        if(root == null) return new ArrayList<>();
+//        List<List<Integer>> retList = new ArrayList<>();
+//        Queue<TreeNode> queue = new ArrayDeque<>();
+//        queue.offer(root);
+//        while(!queue.isEmpty()){//如果队列为空，结束
+//            List<Integer> list = new ArrayList<>();
+//            int n = queue.size();//需要保存当前栈的大小
+//            for(int i = 0 ; i < n;i++){//把当前队列的所有自节点全部入栈
+//                if(root.left != null) queue.offer(root.left);
+//                if(root.right != null) queue.offer(root.right);
+//                list.add(queue.remove().val);//element() == peek(),remove() == poll();
+//                root = queue.peek();//root需要变为队首元素
+//            }
+//            retList.add(list);
+//        }
+//        return retList;
+//    }
+//
+//}
+
+
+//递归实现
+//class Solution{
+//    List<List<Integer>> retList = new ArrayList<>();;//声明retList对象
+//    public List<List<Integer>> levelOrder(TreeNode root) {
+//        levelFunc(root,0);//deep值默认为0，每进入一层deep + 1
+//        return retList;
+//    }
+//    private void levelFunc(TreeNode root,int deep){
+//        if(root == null) return;;
+//        deep++;//每次进入新的一层时，deep+1(可以根据传入的参数deep来严格控制每层层数)
+//        if(retList.size() < deep){//如果当前层数还没开辟list来存放元素，则开辟
+//            List<Integer> list = new ArrayList<>();
+//            retList.add(list);
+//        }
+//        retList.get(deep - 1).add(root.val);//deep-1表示所在层数下标
+//        //此时deep已经+1,进入的子树一定是当前deep的下一层
+//        levelFunc(root.left,deep);
+//        levelFunc(root.right,deep);
+//
+//    }
+//}
+
+
+/**
+ * 二叉树递归遍历
+ */
+//class Solution {
+//    public List<Integer> preorderTraversal(TreeNode root) {
+//        List<Integer> list = new ArrayList<>();
+//        preOrder(root,list);
+//        return list;
+//    }
+//
+//    public void preOrder(TreeNode root,List<Integer> list){
+//        if(root == null){
+//            return;
+//        }
+//        list.add(root.val);
+//        preOrder(root.left,list);
+//        preOrder(root.right,list);
+//    }
+//}
+
+
 
 
 /**
@@ -7,32 +106,32 @@ import java.util.*;
  * 给你一个整数数组 nums 和一个整数 k ，请你返回其中出现频率前 k 高的元素。你可以按 任意顺序 返回答案。
  */
 
-//做前猜想:和上一题应该不同，上一题需要存储下标位置来判断生命周期;
-// 本体需要记录元素出现频率，出现频率应该是Map而不是Set(是否存在过)
-class Solution {
-    public int[] topKFrequent(int[] nums, int k) {
-        Map<Integer,Integer> map = new HashMap<>();//Key-Value值为元素-次数
-        //优先级队列，并且通过Lambda表达式修改为大根堆
-        //这里也可以用int[] 来从当pq元素
-        PriorityQueue<Map.Entry<Integer,Integer>> pq = new PriorityQueue<>((e1,e2)-> e1.getValue() - e2.getValue());
-        for(int i : nums){//先通过遍历,将每个元素的出现次数put到map中
-            map.put(i,map.getOrDefault(i,0)+1);
-        }
-        for(var i : map.entrySet()){//注:var是JDK10引入的局部变量解析，会自动识别数据类型（Map.Entry<Integer, Integer>）
-            pq.offer(i);//将一整行数据项(map.entry)塞入队列中
-            if(pq.size() > k){//大根堆，前K个即为最高频率的k个元素
-                pq.poll();
-            }
-        }
-        //此时pq只保留了最高频率的k个元素
-        int[] ret = new int[k];
-        for(int i = 0; i < k; i++){
-            ret[i] = pq.remove().getKey();
-        }
-        return ret;
-    }
-}
-
+////做前猜想:和上一题应该不同，上一题需要存储下标位置来判断生命周期;
+//// 本体需要记录元素出现频率，出现频率应该是Map而不是Set(是否存在过)
+//class Solution {
+//    public int[] topKFrequent(int[] nums, int k) {
+//        Map<Integer,Integer> map = new HashMap<>();//Key-Value值为元素-次数
+//        //优先级队列，并且通过Lambda表达式修  改为大根堆
+//        //这里也可以用int[] 来从当pq元素
+//        PriorityQueue<Map.Entry<Integer,Integer>> pq = new PriorityQueue<>((e1,e2)-> e1.getValue() - e2.getValue());
+//        for(int i : nums){//先通过遍历,将每个元素的出现次数put到map中
+//            map.put(i,map.getOrDefault(i,0)+1);
+//        }
+//        for(var i : map.entrySet()){//注:var是JDK10引入的局部变量解析，会自动识别数据类型（Map.Entry<Integer, Integer>）
+//            pq.offer(i);//将一整行数据项(map.entry)塞入队列中
+//            if(pq.size() > k){//大根堆，前K个即为最高频率的k个元素
+//                pq.poll();
+//            }
+//        }
+//        //此时pq只保留了最高频率的k个元素
+//        int[] ret = new int[k];
+//        for(int i = 0; i < k; i++){
+//            ret[i] = pq.remove().getKey();
+//        }
+//        return ret;
+//    }
+//}
+//
 
 /**
  * 239.滑动窗口最大值
