@@ -18,19 +18,385 @@ import java.util.*;
 // */
 
 /**
- * 二叉树自底向上层序遍历
+ * 572.判断是否为另一个树的子树
  */
 
 class Solution {
-    public List<List<Integer>> levelOrderBottom(TreeNode root) {
-
+    public boolean isSubtree(TreeNode root, TreeNode subRoot) {
+        if(root == null && subRoot == null) return true;
+        if((root == null && subRoot != null )|| (root != null &&  subRoot == null)) return false;
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.offer(root);
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            for(int i = 0; i < size; i++){
+                TreeNode cur = queue.poll();
+                if(compare(cur,subRoot))//如果相等
+                    return true;
+                if(cur.left != null) queue.offer(cur.left);
+                if(cur.right != null) queue.offer(cur.right);
+            }
+        }
+        return false;
+    }
+    private boolean compare(TreeNode left, TreeNode right){
+        if(left == null && right == null) return true;//当左右均空时返回true
+        if(left == null || right == null || left.val != right.val) return false;
+        //此时左右非空且值相等
+        boolean leftSide = compare(left.left,right.left);//比较左侧
+        boolean rightSide = compare(left.right,right.right);//比较右侧
+        return leftSide && rightSide;
     }
 }
+
+
+/**
+ * 100.判断两棵树是否相同
+ *
+ */
+//class Solution {
+//    public boolean isSameTree(TreeNode p, TreeNode q) {
+//        //本题可以直接把p,q视为统一树的左右子树
+//        return compare(p,q);
+//    }
+//
+//    private boolean compare(TreeNode left, TreeNode right){
+//        if(left == null && right == null) return true;//当左右均空时返回true
+//        if(left == null || right == null || left.val != right.val) return false;
+//        //此时左右非空且值相等
+//        boolean leftSide = compare(left.left,right.left);//比较左侧
+//        boolean rightSide = compare(left.right,right.right);//比较右侧
+//        return leftSide && rightSide;
+//    }
+//}
+
+
+/**
+ * 101.对称二叉树
+ */
+
+//递归法
+//class Solution {
+//    public boolean isSymmetric(TreeNode root) {
+//        if(root == null) return true;
+//        return compare(root.left,root.right);
+//    }
+//
+//    private boolean compare(TreeNode left, TreeNode right){
+//        if(left == null && right == null) return true;//当左右均空时返回true
+//        if(left == null || right == null || left.val != right.val) return false;
+//        //此时左右非空且值相等
+//        boolean inSide = compare(left.right,right.left);//比较内测
+//        boolean outSide = compare(left.left,right.right);//比较外侧
+//        return inSide && outSide;
+//    }
+//}
+
+
+/**
+ * 111.二叉树最小深度(tips:这里最小深度值得是左右子树均为null的节点)
+ */
+
+//递归法:
+//class Solution {
+//    public int minDepth(TreeNode root) {
+//        if(root == null) return 0;
+//        int leftDeep = minDepth(root.left);
+//        int rightDeep = minDepth(root.right);
+//
+//        //如果左子树为空，返回右子树的minDeep
+//        if(root.left == null)   return rightDeep + 1;
+//        //如果右子树为空，返回左子树的minDeep
+//        if(root.right == null)  return leftDeep + 1;
+//
+//        //此时一定是左右子树结尾非空
+//        return Math.min(leftDeep,rightDeep) + 1;
+//    }
+//}
+
+//层序迭代法:
+//class Solution {
+//    public int minDepth(TreeNode root) {
+//        if(root == null) return 0;
+//
+//        int minDeep = Integer.MAX_VALUE;int deep = 0;
+//        //依旧队列起手
+//        Queue<TreeNode> queue = new ArrayDeque<>();
+//        queue.offer(root);
+//        while(!queue.isEmpty()){
+//            deep++;
+//            int size = queue.size();//记录每一层的节点数
+//            for(int i = 0; i < size; i++){//遍历每一层
+//                TreeNode cur = queue.poll();
+//                //如果左右均为空
+//                if (cur.left == null && cur.right == null) minDeep = Math.min(minDeep, deep);
+//                if(cur.left != null) queue.offer(cur.left);
+//                if(cur.right != null) queue.offer(cur.right);
+//
+//            }
+//        }
+//        return minDeep;
+//    }
+//}
+
+
+/**
+ * 104.二叉树的最大深度
+ *
+ */
+//class Solution {
+//    public static void main(String[] args) {
+//        Solution solution = new Solution();
+//        TreeNode node1 = new TreeNode(3);
+//        TreeNode node2 = new TreeNode(9);
+//        TreeNode node3 = new TreeNode(20);
+//        node1.left = node2;
+//        node1.right = node3;
+//        solution.maxDepth(node1);
+//        return;
+//    }
+//    public int maxDepth(TreeNode root) {
+//        if(root == null) return 0;
+//
+//        int deep = 0;
+//        //依旧队列起手，层序遍历
+//        Queue<TreeNode> queue = new ArrayDeque<>();
+//        queue.offer(root);
+//        while(!queue.isEmpty()) {
+//            deep++;//每进入新的一层，先++层数
+//            int size = queue.size();
+//            for(int i = 0; i < size; i++){//遍历每一层的所有节点
+//                TreeNode cur = queue.poll();
+//                if(cur.left != null) queue.offer(cur.left);
+//                if(cur.right != null) queue.offer(cur.right);
+//            }
+//        }
+//        return deep;
+//    }
+//}
+
+
+
+
+
+/**
+ *116.填充每个节点的下一个右侧节点
+ * // Definition for a Node.
+ * class Node {
+ *     public int val;
+ *     public Node left;
+ *     public Node right;
+ *     public Node next;
+ *
+ *     public Node() {}
+ *
+ *     public Node(int _val) {
+ *         val = _val;
+ *     }
+ *
+ *     public Node(int _val, Node _left, Node _right, Node _next) {
+ *         val = _val;
+ *         left = _left;
+ *         right = _right;
+ *         next = _next;
+ *     }
+ * };
+ */
+//class Solution {
+//    public Node connect(Node root) {
+//        if(root == null) return new Node();
+//
+//        //依旧借助队列实现层序遍历，ArrayDeque真神了
+//        Queue<Node> queue = new ArrayDeque<>();
+//        queue.offer(root);
+//        while(!queue.isEmpty()){
+//            int size = queue.size();//依旧记录当前层数的节点数
+//            for(int i = 0; i < size; i++){
+//                Node cur = queue.poll();
+//                if(i != size-1) {//当不为层数的最后一位时
+//                    cur.next = queue.peek();
+//                }
+//                if(cur.left != null) queue.offer(cur.left);
+//                if(cur.right != null) queue.offer(cur.right);
+//            }
+//        }
+//        return root;
+//    }
+//}
+
+
+
+
+/**
+ * 515.二叉树行的最大值
+ */
+//class Solution {
+//    public List<Integer> largestValues(TreeNode root) {
+//        if(root == null) return new ArrayList<>();
+//
+//        List<Integer> list = new ArrayList<>();
+//        //借助队列来实现层序遍历
+//        Queue<TreeNode> queue = new ArrayDeque<>();
+//
+//        queue.offer(root);
+//        while (!queue.isEmpty()){//当队内为空，遍历结束
+//            int size = queue.size();//记录当前层的节点数
+//            int max = Integer.MIN_VALUE;//每层开始重置Max值
+//
+//            for(int i = 0; i < size; i++){//开始遍历当前这层元素
+//                TreeNode cur = queue.poll();
+//                if(cur.val > max) max = cur.val;
+//                if(cur.left != null) queue.offer(cur.left);
+//                if(cur.right != null) queue.offer(cur.right);
+//            }
+//            list.add(max);
+//        }
+//        return list;
+//    }
+//}
+
+
+
+/**
+ * 429.N叉树的层序遍历
+ */
+
+//class Solution {
+//    public List<List<Integer>> levelOrder(Node root) {
+//        if(root == null) return new ArrayList<>();
+//        List<List<Integer>> retList = new ArrayList<>();
+//        Queue<Node> queue = new ArrayDeque<>();
+//        queue.offer(root);
+//        while(!queue.isEmpty()){
+//            int size = queue.size();//记录每一层的节点个数
+//            List<Integer> list = new ArrayList<>();//实例化list存储一层的节点值
+//            for(int i = 0; i < size; i++){//遍历当前层的所有节点
+//                Node cur = queue.poll();
+//                list.add(cur.val);
+//                for(Node child : cur.children){
+//                    if(child != null) queue.offer(child);
+//                }
+//            }
+//            retList.add(list);
+//        }
+//        return retList;
+//    }
+//}
+
+
+
+/**
+ * 637.二叉树每层的平均值
+ */
+//class Solution {
+//    public List<Double> averageOfLevels(TreeNode root) {
+//        //依旧递归，java中难以利用全局变量（指针）进行操作
+//        if(root == null) return new ArrayList<>();
+//        Queue<TreeNode> queue = new ArrayDeque<>();
+//        List<Double> list = new ArrayList<>();
+//        queue.offer(root);//root先入栈，保证了队列非空，也保证了先poll在对poll元素操作的特性
+//        while (!queue.isEmpty()) {
+//            int size = queue.size();//记录当前层节点数
+//            double sum = 0;//初始化double;
+//            for(int i = 0; i < size; i++){
+//                TreeNode cur = queue.poll();
+//                sum += cur.val;
+//                if(cur.left != null) queue.offer(cur.left);
+//                if(cur.right != null) queue.offer(cur.right);
+//            }
+//            list.add(sum / size);
+//        }
+//        return list;
+//    }
+//}
+
+
+
+
+
+/**
+ * 二叉树右视图
+ */
+//迭代写法:
+//class Solution {
+//    public List<Integer> rightSideView(TreeNode root) {
+//        if (root == null) return new ArrayList<>();
+//        //采用迭代的方式
+//        Queue<TreeNode> queue = new ArrayDeque<>();
+//        List<Integer> list = new ArrayList<>();
+//        queue.offer(root);
+//        while (!queue.isEmpty()) {//当队列非空，执行循环
+//            int size = queue.size();//记录当前队列的size
+//            for (int i = 0; i < size; i++) {//站内入栈
+//                TreeNode cur = queue.poll();//要记住，永远是对poll()出来的元素进行操作，且不要直接使用cur
+//                if (i == size - 1) list.add(cur.val);//对于特殊值，永远是循环内置判断
+//                if (cur.left != null) queue.offer(cur.left);
+//                if (cur.right != null) queue.offer(cur.right);
+//            }
+//        }
+//        return list;
+//    }
+//}
+
+
+//class Solution {
+//    Map<Integer,Integer> map = new HashMap<>();//Key-Value值为deep-num
+//    int deep = 0;
+//    public List<Integer> rightSideView(TreeNode root) {
+//        if(root == null) return new ArrayList<>();
+//        List<Integer> list = new ArrayList<>();
+//        levelOrder(root,deep);
+//        for(int i = 0; i < deep; i++) {
+//            list.add(map.get(i));
+//        }
+//        return list;
+//    }
+//
+//    private void levelOrder(TreeNode root,int deep){
+//        if(root == null) return;
+//        deep++;
+//        map.put(deep,root.val);
+//        if(root.left != null) levelOrder(root.left,deep);
+//        if(root.right != null) levelOrder(root.right,deep);
+//    }
+//}
+
+
+
+
+
+
 
 /**
  * 二叉树层序遍历
  */
-//迭代实现——借助队列
+////迭代实现——借助队列
+//规范写法
+//class Solution {
+//    public List<List<Integer>> levelOrder(TreeNode root) {
+//        if(root == null) return new ArrayList<>();
+//        List<List<Integer>> retList = new ArrayList<>();
+//        Queue<TreeNode> queue = new ArrayDeque<>();
+//        queue.offer(root);
+//        while(!queue.isEmpty()){
+//            int size = queue.size();//先记录当前层有多少元素
+//            List<Integer> list = new ArrayList<>();//每层新建一个list
+//            for(int i = 0; i < size; i++){
+//                //1.对队列进行操作，永远是对poll出来的元素进行操作，千万不要直接对着栈顶元素进行操作
+//                TreeNode cur = queue.poll();//用cur而非root，不然污染变量名
+//                list.add(cur.val);
+//                if(cur.left != null) queue.offer(cur.left);
+//                if(cur.right != null) queue.offer(cur.right);
+//                //因为依旧poll完了，所以无需再poll了
+//            }
+//            retList.add(list);
+//        }
+//        return retList;
+//    }
+//}
+
+
+//这一部分写的十分混乱不堪！完全不规范❌
 //class Solution{
 //
 //    public List<List<Integer>> levelOrder(TreeNode root){
@@ -49,6 +415,8 @@ class Solution {
 //            }
 //            retList.add(list);
 //        }
+//        //二叉树从底向上层序遍历
+//        //Collections.reverse(retList);
 //        return retList;
 //    }
 //
