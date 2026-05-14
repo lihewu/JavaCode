@@ -18,36 +18,67 @@ import java.util.*;
 // */
 
 /**
+ * 110.平衡二叉树
+ */
+//用递归的方式根本无序后序遍历，因为递归本身就是从底向上返回
+class Solution {
+    public boolean isBalanced(TreeNode root) {
+        if(root == null) return true;
+        return getDeep(root) != -1;
+    }
+
+    private int getDeep(TreeNode root) {
+        if(root == null) return 0;
+        int leftDeep = getDeep(root.left);
+        if(leftDeep == -1) return -1;
+
+        int rightDeep = getDeep(root.right);
+        if(rightDeep == -1) return -1;
+
+        //如果左右子树高度之差>1，则说明不为二叉平衡树
+        if(Math.abs(leftDeep - rightDeep) > 1) return -1;
+
+        //如果执行到这里，说明left和right均为平衡树
+        return Math.abs(leftDeep - rightDeep) + 1;
+    }
+}
+
+
+
+
+
+
+/**
  * 572.判断是否为另一个树的子树
  */
 
-class Solution {
-    public boolean isSubtree(TreeNode root, TreeNode subRoot) {
-        if(root == null && subRoot == null) return true;
-        if((root == null && subRoot != null )|| (root != null &&  subRoot == null)) return false;
-        Queue<TreeNode> queue = new ArrayDeque<>();
-        queue.offer(root);
-        while(!queue.isEmpty()) {
-            int size = queue.size();
-            for(int i = 0; i < size; i++){
-                TreeNode cur = queue.poll();
-                if(compare(cur,subRoot))//如果相等
-                    return true;
-                if(cur.left != null) queue.offer(cur.left);
-                if(cur.right != null) queue.offer(cur.right);
-            }
-        }
-        return false;
-    }
-    private boolean compare(TreeNode left, TreeNode right){
-        if(left == null && right == null) return true;//当左右均空时返回true
-        if(left == null || right == null || left.val != right.val) return false;
-        //此时左右非空且值相等
-        boolean leftSide = compare(left.left,right.left);//比较左侧
-        boolean rightSide = compare(left.right,right.right);//比较右侧
-        return leftSide && rightSide;
-    }
-}
+//class Solution {
+//    public boolean isSubtree(TreeNode root, TreeNode subRoot) {
+//        if(root == null && subRoot == null) return true;
+//        if((root == null && subRoot != null )|| (root != null &&  subRoot == null)) return false;
+//        Queue<TreeNode> queue = new ArrayDeque<>();
+//        queue.offer(root);
+//        while(!queue.isEmpty()) {
+//            int size = queue.size();
+//            for(int i = 0; i < size; i++){
+//                TreeNode cur = queue.poll();
+//                if(compare(cur,subRoot))//如果相等
+//                    return true;
+//                if(cur.left != null) queue.offer(cur.left);
+//                if(cur.right != null) queue.offer(cur.right);
+//            }
+//        }
+//        return false;
+//    }
+//    private boolean compare(TreeNode left, TreeNode right){
+//        if(left == null && right == null) return true;//当左右均空时返回true
+//        if(left == null || right == null || left.val != right.val) return false;
+//        //此时左右非空且值相等
+//        boolean leftSide = compare(left.left,right.left);//比较左侧
+//        boolean rightSide = compare(left.right,right.right);//比较右侧
+//        return leftSide && rightSide;
+//    }
+//}
 
 
 /**
