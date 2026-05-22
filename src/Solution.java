@@ -384,35 +384,82 @@ import java.util.*;
  * };
  */
 
-/**
- *根据前序遍历&后续遍历构造二叉树
- */
-class Solution {
-    Map<Integer,Integer> map;//构建inorder的value-index map
-    public TreeNode buildTree(int[] preorder, int[] inorder) {
-        if(preorder.length == 0 || inorder.length == 0) return null;
-        map = new HashMap<>();
-        for(int i = 0; i < inorder.length; i++) {
-            map.put(inorder[i],i);
-        }
-        return findNode(inorder,0,inorder.length,preorder,0,preorder.length);
-    }
-    private TreeNode findNode(int[] inorder, int inBegin,int inEnd,int[] preorder,int preBegin,int preEnd) {
-        //左开右闭，如果不符合定义return null
-        if(inBegin >= inEnd || preBegin >= preEnd) return null;
 
-        int rootValue = preorder[preBegin];//记录当前root值
-        int rootIndex = map.get(rootValue);//root在inorder的index
-        TreeNode root = new TreeNode(rootValue);
-        //划分子树大小
-        int leftSize = rootIndex - inBegin;
-        root.left = findNode(inorder,inBegin,rootIndex,
-                preorder,preBegin+1,preBegin + leftSize + 1);
-        root.right = findNode(inorder,rootIndex + 1, inEnd,
-                preorder,preBegin + leftSize + 1, preEnd);
-        return root;
+/**
+ * 112.路径之和
+ */
+
+//回溯（无path记录）
+class Solution {
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if(root == null) return false;
+        targetSum -= root.val;
+        if(root.left == null && root.right == null) {
+            if(targetSum == 0) return true;
+        } else {
+            if(hasPathSum(root.left,targetSum)) return true;
+            if(hasPathSum(root.right,targetSum)) return true;
+        }
+        targetSum += root.val;
+        return  false;
     }
 }
+
+
+
+//回溯算法
+//class Solution {
+//    public boolean hasPathSum(TreeNode root, int targetSum) {
+//        List<Integer> path = new ArrayList<>();//借助path实现回溯
+//        if(root == null && targetSum != 0) return false;
+//        return backTrack(root,path,targetSum);
+//    }
+//    private boolean backTrack(TreeNode root,List<Integer> path,int targetSum) {
+//        if(root == null) return false;
+//        path.add(root.val);
+//        if(root.left == null && root.right == null) { //如果为叶子节点，则计算
+//            int sum = 0;
+//            for(int i : path) sum += i;
+//            if(sum == targetSum) return true;
+//        } else {
+//            //如果执行左子树有成功的，直接return true;
+//            if(backTrack(root.left,path,targetSum)) return true;
+//            if(backTrack(root.right,path,targetSum)) return true;
+//        }
+//        path.remove(path.size()-1);
+//        return false;
+//    }
+//}
+
+/**
+ *leetcode105.根据前序遍历&后续遍历构造二叉树
+ */
+//class Solution {
+//    Map<Integer,Integer> map;//构建inorder的value-index map
+//    public TreeNode buildTree(int[] preorder, int[] inorder) {
+//        if(preorder.length == 0 || inorder.length == 0) return null;
+//        map = new HashMap<>();
+//        for(int i = 0; i < inorder.length; i++) {
+//            map.put(inorder[i],i);
+//        }
+//        return findNode(inorder,0,inorder.length,preorder,0,preorder.length);
+//    }
+//    private TreeNode findNode(int[] inorder, int inBegin,int inEnd,int[] preorder,int preBegin,int preEnd) {
+//        //左开右闭，如果不符合定义return null
+//        if(inBegin >= inEnd || preBegin >= preEnd) return null;
+//
+//        int rootValue = preorder[preBegin];//记录当前root值
+//        int rootIndex = map.get(rootValue);//root在inorder的index
+//        TreeNode root = new TreeNode(rootValue);
+//        //划分子树大小
+//        int leftSize = rootIndex - inBegin;
+//        root.left = findNode(inorder,inBegin,rootIndex,
+//                preorder,preBegin+1,preBegin + leftSize + 1);
+//        root.right = findNode(inorder,rootIndex + 1, inEnd,
+//                preorder,preBegin + leftSize + 1, preEnd);
+//        return root;
+//    }
+//}
 
 
 /**
