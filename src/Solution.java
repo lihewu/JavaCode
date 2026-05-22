@@ -383,6 +383,176 @@ import java.util.*;
  *     }
  * };
  */
+
+/**
+ *根据前序遍历&后续遍历构造二叉树
+ */
+class Solution {
+    Map<Integer,Integer> map;//构建inorder的value-index map
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder.length == 0 || inorder.length == 0) return null;
+        map = new HashMap<>();
+        for(int i = 0; i < inorder.length; i++) {
+            map.put(inorder[i],i);
+        }
+        return findNode(inorder,0,inorder.length,preorder,0,preorder.length);
+    }
+    private TreeNode findNode(int[] inorder, int inBegin,int inEnd,int[] preorder,int preBegin,int preEnd) {
+        //左开右闭，如果不符合定义return null
+        if(inBegin >= inEnd || preBegin >= preEnd) return null;
+
+        int rootValue = preorder[preBegin];//记录当前root值
+        int rootIndex = map.get(rootValue);//root在inorder的index
+        TreeNode root = new TreeNode(rootValue);
+        //划分子树大小
+        int leftSize = rootIndex - inBegin;
+        root.left = findNode(inorder,inBegin,rootIndex,
+                preorder,preBegin+1,preBegin + leftSize + 1);
+        root.right = findNode(inorder,rootIndex + 1, inEnd,
+                preorder,preBegin + leftSize + 1, preEnd);
+        return root;
+    }
+}
+
+
+/**
+ * 106.根据中序 & 后序 构造二叉树
+ */
+//class Solution {
+//    Map<Integer,Integer> map;
+//    public TreeNode buildTree(int[] inorder, int[] postorder) {
+//        if(inorder.length == 0 || postorder.length == 0) return null;
+//        //HashMap存储inOrder
+//        map = new HashMap<>();//K-V值:value-index
+//        //存入键对值
+//        for(int i = 0; i < inorder.length; i++){
+//            map.put(inorder[i],i);
+//        }
+//        //采用左闭右开
+//        return findNode(inorder,0,inorder.length,postorder,0,postorder.length);
+//    }
+//    //根据区间来确定树的结构,若inorder不符合区间结构，则return null
+//    private TreeNode findNode(int[] inorder,int inBegin,int inEnd,int[] postorder,int postBegin,int postEnd) {
+//        if(inBegin >= inEnd || postBegin >= postEnd) {//只要不符合区间大小，就return null
+//            return null;
+//        }
+//        //记录当前根节点信息
+//        int rootValue = postorder[postEnd-1];
+//        TreeNode root = new TreeNode(rootValue);
+//        int rootIndex = map.get(rootValue);
+//
+//        //必须对postorder进行分块，记录左子树的元素个数
+//        int leftSize = rootIndex - inBegin;
+//        root.left = findNode(inorder,inBegin,rootIndex,
+//                postorder,postBegin,postBegin + leftSize);
+//        root.right = findNode(inorder,rootIndex+1,inEnd,
+//                postorder,postBegin + leftSize,postEnd-1);
+//        return root;
+//    }
+//}
+
+
+
+
+/**
+ * 返回二叉树最底层的最左节点值
+ */
+
+////回溯法
+//class Solution {
+//    int maxDeep = -1;//用于记录最大深度
+//    int val = 0;
+//    public int findBottomLeftValue(TreeNode root) {
+//        if(root == null) return 0;
+//        val = root.val;//这一步一定要写，如果只有root，返回root.val
+//        findLeftValue(root,0);
+//        return val;
+//    }
+//    private void findLeftValue(TreeNode root,int deep){
+//        if(root == null) return;
+//        if(deep > maxDeep) { //如果当前的deep值 > maxDeep，说明不为最底层
+//            maxDeep = deep;
+//            val = root.val;
+//        }
+//        findLeftValue(root.left,deep+1);
+//        findLeftValue(root.right,deep+1);
+//    }
+//}
+
+//同样是迭代法:
+//class Solution {
+//    public int findBottomLeftValue(TreeNode root) {
+//        Queue<TreeNode> queue = new ArrayDeque<>();
+//        int res = 0;
+//        queue.offer(root);
+//        while(!queue.isEmpty()) {
+//            int size = queue.size();
+//            for(int i = 0; i < size; i++) {
+//                TreeNode cur = queue.poll();
+//                //记录每层的第一个节点val,结束层序遍历时 此时res的val就是最后一层最左节点的val
+//                if(i == 0) res = cur.val;
+//                if(cur.left != null) queue.offer(cur.left);
+//                if(cur.right != null) queue.offer(cur.right);
+//            }
+//
+//        }
+//        return res;
+//    }
+//}
+
+//愚蠢的写法
+//class Solution {
+//    public int findBottomLeftValue(TreeNode root) {
+//        Queue<TreeNode> queue = new ArrayDeque<>();
+//        int deep = 0;
+//        queue.offer(root);
+//        while(!queue.isEmpty()) {
+//            int size = queue.size();
+//            for(int i = 0; i < size; i++) {
+//                TreeNode cur = queue.poll();
+//                if(cur.left != null) queue.offer(cur.left);
+//                if(cur.right != null) queue.offer(cur.right);
+//            }
+//            deep++;
+//        }
+//        queue.offer(root);
+//        while(--deep != 0) {
+//            int size = queue.size();
+//            for(int i = 0; i < size; i++) {
+//                TreeNode cur = queue.poll();
+//                if(cur.left != null) queue.offer(cur.left);
+//                if(cur.right != null) queue.offer(cur.right);
+//            }
+//        }
+//        return queue.poll().val;
+//    }
+//}
+
+
+/**
+ * 完全二叉树节点个数
+ */
+
+//class Solution {
+//    public int countNodes(TreeNode root) {
+//        if(root == null) return 0;
+//        Queue<TreeNode> queue = new ArrayDeque<>();
+//        int count = 0;
+//        queue.offer(root);
+//        while(!queue.isEmpty()) {
+//            int size = queue.size();
+//            for(int i = 0; i < size; i++) {
+//                TreeNode cur = queue.poll();
+//                count++;
+//                if(cur.left != null) queue.offer(cur.left);
+//                if(cur.right != null) queue.offer(cur.right);
+//            }
+//        }
+//        return count;
+//    }
+//}
+
+
 //class Solution {
 //    public Node connect(Node root) {
 //        if(root == null) return new Node();
