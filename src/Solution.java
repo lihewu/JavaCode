@@ -17,31 +17,181 @@ import java.util.*;
  * }
 // */
 
+
+/**
+ * 二叉树所有左叶子之和
+ */
+//class Solution {
+//    public int sumOfLeftLeaves(TreeNode root) {
+//        int sum = 0;
+//        //迭代必须借助队列
+//        Queue<TreeNode> queue = new ArrayDeque<>();
+//        queue.offer(root);
+//        while(!queue.isEmpty()) {
+//            int size = queue.size();
+//            for(int i = 0; i < size; i++) {
+//                TreeNode cur = queue.poll();
+//                if(cur.left != null && cur.left.left == null && cur.left.right == null)
+//                    sum += cur.left.val;
+//                if(cur.left != null) queue.offer(cur.left);
+//                if(cur.right != null) queue.offer(cur.right);
+//            }
+//        }
+//        return sum;
+//    }
+//}
+
+/**
+ * 257.返回二叉树的左右路径
+ */
+
+//回溯法-通过传统的path进行记录
+//class Solution {
+//    List<String> ret = new ArrayList<>();
+//    public List<String> binaryTreePaths(TreeNode root) {
+//        List<Integer> path = new ArrayList<>();
+//        backTrack(root,path);
+//        return ret;
+//    }
+//    private void backTrack(TreeNode root, List<Integer> path) {
+//        if(root == null) return;
+//        //先序遍历（注意这里是把val存入到path中）
+//        path.add(root.val);
+//        //如果为叶子节点
+//        if(root.left == null && root.right == null) {
+//            StringBuilder sb = new StringBuilder();
+//            for(int i = 0; i < path.size()-1; i++) {//把当前path中所有的val组成一个路径存入到ret中
+//                sb.append(path.get(i));
+//                sb.append("->");
+//            }
+//            //最后一个字符没有”->“
+//            sb.append(path.get(path.size()-1));
+//            ret.add(sb.toString());
+//        }
+//
+//        if(root.left != null) {
+//            backTrack(root.left,path);
+//            path.remove(path.size()-1);
+//        }
+//        if(root.right != null) {
+//            backTrack(root.right,path);
+//            path.remove(path.size()-1);
+//        }
+//
+//    }
+//}
+
+
+
+//回溯法——通过sb.length进行判断
+//class Solution {
+//    List<String> list = new ArrayList<>();
+//    public List<String> binaryTreePaths(TreeNode root) {
+//        if(root == null) return list;
+//        StringBuilder sb = new StringBuilder();
+//        backTrack(root,sb);
+//        return list;
+//    }
+//
+//    private void backTrack(TreeNode root, StringBuilder sb) {
+//        //终止条件
+//        if(root == null) return;
+//        //记录当前sb长度
+//        int len = sb.length();
+//        if(len > 0) sb.append("->");//sb非空
+//        sb.append(root.val);
+//        //如果为叶子节点
+//        if(root.left == null && root.right == null) {
+//            list.add(sb.toString());
+//        }else{
+//            backTrack(root.left,sb);
+//            backTrack(root.right,sb);
+//        }
+//        //回溯
+//        sb.setLength(len);
+//    }
+//}
+
+
+//递归法
+//class Solution {
+//    List<String> list = new ArrayList<>();
+//    public List<String> binaryTreePaths(TreeNode root) {
+//        func(root,"");
+//        return list;
+//    }
+//    private void func(TreeNode root,String str) {
+//        //如果root 为空则终止
+//        if(root == null) return;
+//        //若为叶子节点，则直接结束此本递归，并将其add到list中
+//        if(root.left == null && root.right == null) {
+//            StringBuilder sb = new StringBuilder(str);
+//            list.add(sb.append(root.val).toString());
+//            return;
+//        }
+//        //路径中间值
+//        StringBuilder sb = new StringBuilder(str);
+//        sb.append(root.val);
+//        sb.append("->");
+//        func(root.left,sb.toString());
+//        func(root.right,sb.toString());
+//    }
+//}
+
+
+
+
+//class Solution {
+//    public List<List<Integer>> levelOrder(TreeNode root) {
+//        //防空处理
+//        if(root == null) return new ArrayList<>();
+//        //借助队列遍历
+//        Queue<TreeNode> queue = new ArrayDeque<>();
+//        List<List<Integer>> retList =  new ArrayList<>();
+//
+//        queue.offer(root);
+//        while(!queue.isEmpty()) {
+//            //每次遍历新的一行
+//            int size = queue.size();
+//            List<Integer> list = new ArrayList<>();
+//            for(int i = 0; i < size; i++){
+//                TreeNode cur = queue.poll();
+//                list.add(cur.val);
+//                if(cur.left != null) queue.offer(cur.left);
+//                if(cur.right != null) queue.offer(cur.right);
+//            }
+//            retList.add(list);
+//        }
+//        return retList;
+//    }
+//}
+
+
 /**
  * 110.平衡二叉树
  */
 //用递归的方式根本无序后序遍历，因为递归本身就是从底向上返回
-class Solution {
-    public boolean isBalanced(TreeNode root) {
-        if(root == null) return true;
-        return getDeep(root) != -1;
-    }
-
-    private int getDeep(TreeNode root) {
-        if(root == null) return 0;
-        int leftDeep = getDeep(root.left);
-        if(leftDeep == -1) return -1;
-
-        int rightDeep = getDeep(root.right);
-        if(rightDeep == -1) return -1;
-
-        //如果左右子树高度之差>1，则说明不为二叉平衡树
-        if(Math.abs(leftDeep - rightDeep) > 1) return -1;
-
-        //如果执行到这里，说明left和right均为平衡树
-        return Math.abs(leftDeep - rightDeep) + 1;
-    }
-}
+//class Solution {
+//    public boolean isBalanced(TreeNode root) {
+//        if(root == null) return true;
+//        return getDeep(root) != -1;
+//    }
+//
+//    private int getDeep(TreeNode root) {
+//        if(root == null) return 0;
+//        int leftDeep = getDeep(root.left);
+//        if(leftDeep == -1) return -1;
+//
+//        int rightDeep = getDeep(root.right);
+//        if(rightDeep == -1) return -1;
+//
+//        //如果左右子树高度之差>1，则说明不为二叉平衡树
+//        if(Math.abs(leftDeep - rightDeep) > 1) return -1;
+//
+//        //如果执行到这里，说明left和right均为平衡树
+//        return Math.max(leftDeep ,rightDeep) + 1;
+//    }
+//}
 
 
 
