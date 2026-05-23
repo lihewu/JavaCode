@@ -385,25 +385,71 @@ import java.util.*;
  */
 
 
+
+
+/**
+ * 合并两个二叉树
+ */
+//class Solution {
+//    public TreeNode mergeTrees(TreeNode root1, TreeNode root2) {
+//        if(root1 == null) return root2;
+//        if(root2 == null) return root1;
+//        TreeNode root = new TreeNode(root1.val + root2.val);
+//        root.left = mergeTrees(root1.left,root2.left);
+//        root.right = mergeTrees(root1.right,root2.right);
+//        return root;
+//    }
+//}
+
+
+
+/**
+ * 654. 最大二叉树
+ */
+//class Solution {
+//    public TreeNode constructMaximumBinaryTree(int[] nums) {
+//        if(nums.length == 0) return null;
+//        return findMaxNode(nums,0,nums.length);
+//    }
+//    private TreeNode findMaxNode(int[] nums,int left, int right) {
+//        //依旧左开右闭
+//        if(left >= right) return null;
+//        int max = nums[left];
+//        int pos = left;
+//        for(int i = left; i < right; i ++) {
+//            if(nums[i] > max) {//记录left - right的最大值及其下标pos
+//                max = nums[i];
+//                pos = i;
+//            }
+//        }
+//        TreeNode root = new TreeNode(max);
+//        root.left = findMaxNode(nums,left,pos);
+//        root.right = findMaxNode(nums,pos + 1, right);
+//        return root;
+//    }
+//}
+
+
+
 /**
  * 112.路径之和
  */
 
 //回溯（无path记录）
-class Solution {
-    public boolean hasPathSum(TreeNode root, int targetSum) {
-        if(root == null) return false;
-        targetSum -= root.val;
-        if(root.left == null && root.right == null) {
-            if(targetSum == 0) return true;
-        } else {
-            if(hasPathSum(root.left,targetSum)) return true;
-            if(hasPathSum(root.right,targetSum)) return true;
-        }
-        targetSum += root.val;
-        return  false;
-    }
-}
+//class Solution {
+//    public boolean hasPathSum(TreeNode root, int targetSum) {
+//        if(root == null) return false;
+//        targetSum -= root.val;
+//        if(root.left == null && root.right == null) {
+//            if(targetSum == 0) return true;
+//        } else {
+//            if(hasPathSum(root.left,targetSum)) return true;
+//            if(hasPathSum(root.right,targetSum)) return true;
+//        }
+//        targetSum += root.val;
+//        return  false;
+//    }
+//}
 
 
 
