@@ -384,7 +384,39 @@ import java.util.*;
  * };
  */
 
+/**
+ * 验证是否为二叉搜索树
+ */
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        if(root == null) return true;
+        return isBST(root,Long.MIN_VALUE,Long.MAX_VALUE);
+    }
+    private boolean isBST(TreeNode root,long min, long max) {
+        if(root == null) return true;
+        if(root.val <= min || root.val >= max) return false;
+        return isBST(root.left,min,root.val) && isBST(root.right,root.val,max);
+    }
+}
 
+
+
+/**
+ * 二叉搜索树
+ */
+//class Solution {
+//    public TreeNode searchBST(TreeNode root, int val) {
+//        if(root == null) return null;
+//        if(root.val == val) {
+//            return root;
+//        } else if(root.val > val) {
+//             return searchBST(root.left,val);
+//
+//        } else {
+//            return searchBST(root.right,val);
+//        }
+//    }
+//}
 
 
 /**
