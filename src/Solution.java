@@ -2,6 +2,140 @@ import java.util.*;
 //import java.util.Stack;//最垃圾的类，没有之一
 
 /**
+ * 二叉树最近公共祖先
+ * work!这题确实有点Hard
+ */
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null || root == p || root == q) return root;//用来找到节点，或者说明找不到节点
+
+        //遍历了整个二叉树
+        TreeNode left = lowestCommonAncestor(root.left,p,q);
+        TreeNode right = lowestCommonAncestor(root.right,p,q);
+
+        if(left == null && right == null) {//遍历空，无结果
+            return null;
+        } else if (left == null && right != null) {//说明节点一定在右子树里，进入到右子树中
+            return right;
+        } else if (right == null && left != null){//表示只有有
+            return left;
+        } else return root; //此时两个节点一定是存在于root的子树中
+    }
+}
+
+
+/**
+ * 二叉搜索树的众数
+ */
+
+////递归-空间复杂度为0(1)
+//class Solution {
+//    TreeNode pre;
+//    int maxCount = 0;
+//    int count;
+//    List<Integer> list;
+//    public int[] findMode(TreeNode root) {
+//        if(root == null) return new int[0];
+//        list = new ArrayList<>();
+//        inOrder(root);
+//
+//        int[] arr = new int[list.size()];
+//        for (int i = 0; i < list.size(); i++) {
+//            arr[i] = list.get(i);
+//        }
+//        return arr;
+//    }
+//    private void inOrder(TreeNode root) {
+//        if(root == null) return;
+//
+//        inOrder(root.left);
+//
+//        if(pre == null || pre.val != root.val) {
+//            count = 1 ;
+//        } else {
+//            count += 1;
+//        }
+//        //对list进行操作
+//        if(count > maxCount) { //如果有比maxCount更大的count，则说明一定前面的maxCount不为真正的count
+//            list.clear();
+//            maxCount = count;
+//            list.add(root.val);
+//        } else if (count == maxCount) {
+//            list.add(root.val);
+//        }
+//        pre = root;
+//
+//        inOrder(root.right);
+//    }
+//}
+
+
+
+
+////暴力法
+//class Solution {
+//    Map<Integer,Integer> map;
+//    public int[] findMode(TreeNode root) {
+//        map = new HashMap<>();//Key-Value值:val-count
+//        List<Integer> list = new ArrayList<>();
+//
+//        inOrder(root);
+//
+//        int max = 0;//记录出现最大的频率
+//        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+//            if(entry.getValue() > max) max = entry.getValue();
+//
+//        }
+//        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+//            if(entry.getValue() == max) {
+//                list.add(entry.getKey());
+//            }
+//        }
+//        int[] arr = new int[list.size()];
+//        for(int i = 0; i < list.size(); i++) {
+//            arr[i] = list.get(i);
+//        }
+//        return arr;
+//    }
+//    //中序遍历记录count
+//    private void inOrder(TreeNode root){
+//        if(root == null) return;
+//        inOrder(root.left);
+//        map.put(root.val,map.getOrDefault(root.val,0) + 1);
+//        inOrder(root.right);
+//    }
+//}
+
+
+/**
+ * 二叉搜索树的最小节点差
+ */
+
+//class Solution {
+//    TreeNode pre;
+//    int min = Integer.MAX_VALUE;
+//    public int getMinimumDifference(TreeNode root) {
+//        if(root == null) return 0;
+//        getMin(root);
+//        return min;
+//    }
+//
+//    private void getMin(TreeNode root) {
+//        if(root == null) return;
+//        getMin(root.left);
+//        if(pre != null) {
+//            if(Math.abs(root.val - pre.val) < min) min = Math.abs(root.val - pre.val);
+//        }
+//        pre = root;
+//        getMin(root.right);
+//    }
+//}
+
+
+
+
+
+/**
  * Definition for a binary tree node.
  * public class TreeNode {
  *     int val;
@@ -387,17 +521,17 @@ import java.util.*;
 /**
  * 验证是否为二叉搜索树
  */
-class Solution {
-    public boolean isValidBST(TreeNode root) {
-        if(root == null) return true;
-        return isBST(root,Long.MIN_VALUE,Long.MAX_VALUE);
-    }
-    private boolean isBST(TreeNode root,long min, long max) {
-        if(root == null) return true;
-        if(root.val <= min || root.val >= max) return false;
-        return isBST(root.left,min,root.val) && isBST(root.right,root.val,max);
-    }
-}
+//class Solution {
+//    public boolean isValidBST(TreeNode root) {
+//        if(root == null) return true;
+//        return isBST(root,Long.MIN_VALUE,Long.MAX_VALUE);
+//    }
+//    private boolean isBST(TreeNode root,long min, long max) {
+//        if(root == null) return true;
+//        if(root.val <= min || root.val >= max) return false;
+//        return isBST(root.left,min,root.val) && isBST(root.right,root.val,max);
+//    }
+//}
 
 
 
