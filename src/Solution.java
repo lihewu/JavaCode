@@ -2,26 +2,128 @@ import java.util.*;
 //import java.util.Stack;//最垃圾的类，没有之一
 
 /**
+ * leetcode450.二叉搜索树的删除
+ */
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if(root == null) return root;
+
+        if(root.val == key) {//对当前节点删除
+            if(root.right == null) {
+                return root.left;
+            } else if (root.left == null) {
+                return root.right;
+            } else { //当左右子树均不为空时
+                TreeNode cur = root.right;
+                while(cur.left != null) {//采用右子树最左（小）节点，左子树最右节点同理
+                    cur = cur.left;
+                }
+                cur.left = root.left;//让左子树全划分到右子树最左节点的左子树
+                root = root.right;
+            }
+            return root;
+        }
+
+        //通过 left = ...; right = ...才能遍历整棵树
+        if(root.val < key) root.right = deleteNode(root.right,key);
+        if(root.val > key) root.left = deleteNode(root.left,key);
+
+        return root;
+    }
+}
+
+
+
+/**
+ * 二叉搜索树增加
+ */
+//class Solution {
+//    public TreeNode insertIntoBST(TreeNode root,int val) {
+//        if(root == null) return new TreeNode(val);
+//
+//        if(root.val < val) root.right = insertIntoBST(root.right,val);
+//        else root.left = insertIntoBST(root.left,val);
+//
+//        return root;
+//    }
+//}
+
+//class Solution {
+//    public TreeNode insertIntoBST(TreeNode root, int val) {
+//        if(root == null) return new TreeNode(val);
+//        insert(root,val);
+//        return root;
+//    }
+//    private void insert(TreeNode root,int val) {
+//        if(root.val < val) {
+//            if(root.right == null) {
+//                root.right = new TreeNode(val);
+//            } else {
+//                insert(root.right,val);
+//            }
+//        } else if(root.val > val){
+//            if(root.left == null) {
+//                root.left = new TreeNode(val);
+//            } else {
+//                insert(root.left,val);
+//            }
+//        }
+//    }
+//}
+
+
+/**
+ * 二叉搜索树最近祖先
+ */
+
+//递归法
+//class Solution {
+//    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+//        while (true) {
+//            if (root.val > p.val && root.val > q.val) {
+//                root = root.left;
+//            } else if (root.val < p.val && root.val < q.val) {
+//                root = root.right;
+//            } else {
+//                break;
+//            }
+//        }
+//        return root;
+//    }
+//}
+
+
+//递归法
+//class Solution {
+//    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+//        if(root.val < p.val && root.val < q.val) return lowestCommonAncestor(root.right,p,q);
+//        if(root.val > p.val && root.val > q.val) return lowestCommonAncestor(root.left,p,q);
+//        return root;
+//    }
+//}
+
+
+/**
  * 二叉树最近公共祖先
  * work!这题确实有点Hard
  */
-class Solution {
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        if(root == null || root == p || root == q) return root;//用来找到节点，或者说明找不到节点
-
-        //遍历了整个二叉树
-        TreeNode left = lowestCommonAncestor(root.left,p,q);
-        TreeNode right = lowestCommonAncestor(root.right,p,q);
-
-        if(left == null && right == null) {//遍历空，无结果
-            return null;
-        } else if (left == null && right != null) {//说明节点一定在右子树里，进入到右子树中
-            return right;
-        } else if (right == null && left != null){//表示只有有
-            return left;
-        } else return root; //此时两个节点一定是存在于root的子树中
-    }
-}
+//class Solution {
+//    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+//        if(root == null || root == p || root == q) return root;//用来找到节点，或者说明找不到节点
+//
+//        //遍历了整个二叉树
+//        TreeNode left = lowestCommonAncestor(root.left,p,q);
+//        TreeNode right = lowestCommonAncestor(root.right,p,q);
+//
+//        if(left == null && right == null) {//遍历空，无结果
+//            return null;
+//        } else if (left == null && right != null) {//说明节点一定在右子树里，进入到右子树中
+//            return right;
+//        } else if (right == null && left != null){//表示只有有
+//            return left;
+//        } else return root; //此时两个节点一定是存在于root的子树中
+//    }
+//}
 
 
 /**
