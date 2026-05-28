@@ -2,35 +2,118 @@ import java.util.*;
 //import java.util.Stack;//最垃圾的类，没有之一
 
 /**
- * leetcode450.二叉搜索树的删除
+ * 二叉搜索树转为累加树
+ * 原本值加上原本二叉搜索树中所有比该节点值大的节点值的总和
  */
+
 class Solution {
-    public TreeNode deleteNode(TreeNode root, int key) {
-        if(root == null) return root;
+    int sum ;
+    public TreeNode convertBST(TreeNode root) {
+        if(root == null) return null;
 
-        if(root.val == key) {//对当前节点删除
-            if(root.right == null) {
-                return root.left;
-            } else if (root.left == null) {
-                return root.right;
-            } else { //当左右子树均不为空时
-                TreeNode cur = root.right;
-                while(cur.left != null) {//采用右子树最左（小）节点，左子树最右节点同理
-                    cur = cur.left;
-                }
-                cur.left = root.left;//让左子树全划分到右子树最左节点的左子树
-                root = root.right;
-            }
-            return root;
-        }
-
-        //通过 left = ...; right = ...才能遍历整棵树
-        if(root.val < key) root.right = deleteNode(root.right,key);
-        if(root.val > key) root.left = deleteNode(root.left,key);
+        root.right = convertBST(root.right);
+        sum += root.val;
+        root.val = sum;
+        root.left = convertBST(root.left);
 
         return root;
     }
 }
+
+
+
+
+
+
+/**
+ * 有序数组合并为平衡二叉搜索树
+ */
+//class Solution {
+//    public TreeNode sortedArrayToBST(int[] nums) {
+//        if(nums.length == 0) return null;
+//
+//        TreeNode root = insert(nums,0,nums.length-1);
+//        return root;
+//    }
+//
+//    private TreeNode insert(int[] nums, int left, int right) {
+//        if(left > right) return null;
+//        int pos = (left + right) / 2;
+//        //向左取值
+//        TreeNode node = new TreeNode(nums[pos]);
+//        node.left = insert(nums,left,pos - 1);
+//        node.right = insert(nums,pos + 1, right);
+//
+//        return node;
+//    }
+//}
+
+
+
+
+
+
+
+
+
+
+/**
+ * 二叉搜索树的修剪
+ */
+
+
+//class Solution {
+//    public TreeNode trimBST(TreeNode root, int low, int high) {
+//        if(root == null) return null;
+//
+//        if(low <= root.val && root.val <= high) {//如果根节点在low~high的范围内说明正确
+//            //遍历整棵树
+//            root.left = trimBST(root.left,low,high);
+//            root.right = trimBST(root.right,low,high);
+//        } else if (root.val < low) {
+//            root = root.right;
+//            return trimBST(root,low,high);
+//        } else {
+//            root = root.left;
+//            return trimBST(root,low,high);
+//        }
+//        return root;
+//    }
+//}
+
+
+
+
+/**
+ * leetcode450.二叉搜索树的删除
+ */
+//class Solution {
+//    public TreeNode deleteNode(TreeNode root, int key) {
+//        if(root == null) return root;
+//
+//        if(root.val == key) {//对当前节点删除
+//            if(root.right == null) {
+//                return root.left;
+//            } else if (root.left == null) {
+//                return root.right;
+//            } else { //当左右子树均不为空时
+//                TreeNode cur = root.right;
+//                while(cur.left != null) {//采用右子树最左（小）节点，左子树最右节点同理
+//                    cur = cur.left;
+//                }
+//                cur.left = root.left;//让左子树全划分到右子树最左节点的左子树
+//                root = root.right;
+//            }
+//            return root;
+//        }
+//
+//        //通过 left = ...; right = ...才能遍历整棵树
+//        if(root.val < key) root.right = deleteNode(root.right,key);
+//        if(root.val > key) root.left = deleteNode(root.left,key);
+//
+//        return root;
+//    }
+//}
 
 
 
