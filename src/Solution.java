@@ -1,24 +1,138 @@
 import java.util.*;
 //import java.util.Stack;//最垃圾的类，没有之一
 
+
+/**
+ * 回溯算法——17. 电话号码的字母组合
+ * 给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。答案可以按 任意顺序 返回
+ */
+
+class Solution {
+
+    List<String> list;
+    StringBuilder sb;
+    public List<String> letterCombinations(String digits) {
+        sb = new StringBuilder();
+        list = new ArrayList<>();
+
+        if(digits == null || digits.isEmpty()) return list;
+
+        //初始对应所有的数字，为了直接对应2-9，新增了两个无效的字符串""
+        String[] numString = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        backtracking(digits,numString,0);
+        return list;
+    }
+
+    private void backtracking(String digits,String[] numString, int index) {//index记录当前digits的元素下标
+        if(index == digits.length()) {
+            list.add(sb.toString());
+            return;
+        }
+        String str = numString[digits.charAt(index) - '0'];//记录digits[index]对应数字的string
+        for(int i = 0; i < str.length(); i++) {
+            //收集元素
+            sb.append(str.charAt(i));
+            //递归
+            backtracking(digits,numString,index + 1);
+            //回溯处理
+            sb.deleteCharAt(sb.length() - 1);
+        }
+    }
+}
+
+
+
+
+
+
+/**
+ * 回溯算法——组合总和
+ * 找出所有相加之和为 n 的 k 个数的组合，且满足下列条件：
+ * 只使用数字1到9
+ * 每个数字 最多使用一次
+ * 返回 所有可能的有效组合的列表 。该列表不能包含相同的组合两次，组合可以以任何顺序返回
+ */
+//class Solution {
+//    List<List<Integer>> restList;
+//    List<Integer> path;
+//    int sum = 0;
+//    public List<List<Integer>> combinationSum3(int k, int n) {
+//        restList = new ArrayList<>();
+//        path = new ArrayList<>();
+//        backtracking(k,n,1);
+//        return restList;
+//    }
+//
+//    private void backtracking(int k, int n, int strat) {
+//        if(sum == n && path.size() == k) {
+//            restList.add(new ArrayList<>(path));
+//        }
+//
+//        for(int i = strat; i <= 9; i++) {
+//            path.add(i);
+//            sum += i;
+//            backtracking(k,n,i+1);
+//            path.removeLast();
+//            sum -= i;
+//        }
+//    }
+//}
+
+
+
+/**
+ * 回溯算法——组合
+ * 给定两个整数 n 和 k，返回范围 [1, n] 中所有可能的 k 个数的组合。
+ */
+
+//class Solution {
+//    List<List<Integer>> resList = new ArrayList<>();
+//    List<Integer> path = new ArrayList<>();
+//
+//    public List<List<Integer>> combine(int n, int k) {
+//        backtracking(n,k,1);
+//        return resList;
+//    }
+//    //回溯算法
+//    private void backtracking(int n, int k,int start){
+//        if(path.size() == k ){//符合长度的组合就放到resList中
+//            resList.add(new ArrayList<>(path));//tips:不能直接上传
+//        }
+//        for(int i = start; i <= n; i++) {
+//            path.add(i);
+//            backtracking(n,k,i+1);
+//            path.removeLast();
+//        }
+//    }
+//}
+
+
+
+
+
+
+
+
+
+
 /**
  * 二叉搜索树转为累加树
  * 原本值加上原本二叉搜索树中所有比该节点值大的节点值的总和
  */
 
-class Solution {
-    int sum ;
-    public TreeNode convertBST(TreeNode root) {
-        if(root == null) return null;
-
-        root.right = convertBST(root.right);
-        sum += root.val;
-        root.val = sum;
-        root.left = convertBST(root.left);
-
-        return root;
-    }
-}
+//class Solution {
+//    int sum ;
+//    public TreeNode convertBST(TreeNode root) {
+//        if(root == null) return null;
+//
+//        root.right = convertBST(root.right);
+//        sum += root.val;
+//        root.val = sum;
+//        root.left = convertBST(root.left);
+//
+//        return root;
+//    }
+//}
 
 
 
