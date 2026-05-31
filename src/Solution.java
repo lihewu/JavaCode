@@ -1,44 +1,170 @@
 import java.util.*;
 //import java.util.Stack;//最垃圾的类，没有之一
 
+/**
+ * leetcode-40:组合总数二
+ * 给定一个候选人编号的集合 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+ * candidates 中的每个数字在每个组合中只能使用 一次 。
+ * 注意：解集不能包含重复的组合。
+ */
+
+class Solution {
+    List<List<Integer>> restList;
+    List<Integer> path;
+    int sum = 0;
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        if(candidates == null || candidates.length == 0) return new ArrayList<>();
+
+        restList = new ArrayList<>();
+        path = new ArrayList<>();
+        Arrays.sort(candidates);//对数组进行排序
+        backtracking(candidates,target,0);
+        return restList;
+
+    }
+    private void backtracking(int[] candidates,int target,int startPos){
+        if(sum == target){
+            restList.add(new ArrayList<>(path));
+            return;
+        }
+        for(int i = startPos; i < candidates.length; i++) {
+            //基础剪枝,因为candidates已经有序，此时大于target，后续candidates必然也大于
+            if(sum + candidates[i] > target) break;
+            //需要对重复的树干进行拦截
+            if(i > startPos && candidates[i] == candidates[i-1]) {//当i > startPos时，可以看作树的横向遍历
+                continue;//必然和前面一组相同，跳出本次
+            }
+            path.add(candidates[i]);
+            sum += candidates[i];
+            backtracking(candidates,target,i+1);
+            sum -= path.getLast();
+            path.removeLast();
+        }
+    }
+}
+
+
+
+
+
+
+
+/**
+ * 回溯算法-组合之和
+ * 给你一个 无重复元素 的整数数组 candidates 和一个目标整数 target
+ * 找出 candidates 中可以使数字和为目标数 target 的 所有 不同组合 ，并以列表形式返回。你可以按 任意顺序 返回这些组合。
+ * candidates 中的 同一个 数字可以 无限制重复被选取 。如果至少一个数字的被选数量不同，则两种组合是不同的。
+ * 对于给定的输入，保证和为 target 的不同组合数少于 150 个
+ */
+
+
+//class Solution {
+//    List<List<Integer>> resList;
+//    List<Integer> path;
+//    int sum = 0;
+//    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+//        if(candidates == null || candidates.length == 0) return new ArrayList<>();
+//        resList = new ArrayList<>();
+//        path = new ArrayList<>();
+//        backtracking(candidates,target,0);
+//        return resList;
+//    }
+//
+//    private void backtracking(int[] candidates,int target,int startPos) {
+//        if(sum > target) return; //因为同一数组可以无限制选取，所以必须要加上判断
+//        if(sum == target) {
+//            resList.add(new ArrayList<>(path));
+//            return;
+//        }
+//        for(int i = startPos; i < candidates.length; i++) {
+//            path.add(candidates[i]);
+//            sum += candidates[i];
+//            backtracking(candidates,target,i);//因为可以无限选取自身，所以不能是i+1，必须是i
+//            sum -= path.getLast();
+//            path.removeLast();
+//        }
+//    }
+//}
+
+
+
+
 
 /**
  * 回溯算法——17. 电话号码的字母组合
  * 给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。答案可以按 任意顺序 返回
  */
 
-class Solution {
+//class Solution {
+//    List<String> list;
+//    StringBuilder sb;
+//
+//    public List<String> letterCombinations(String digits) {
+//        list = new ArrayList<>();
+//        sb = new StringBuilder();
+//
+//        if(digits == null || digits.isEmpty()) return list;
+//
+//        //初始对应所有的数字，为了直接对应2-9，新增了两个无效的字符串""
+//        String[] numString = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+//
+//        backtracking(digits,numString,0);
+//        return list;
+//    }
+//
+//    private void backtracking(String digits,String[] numString,int index) {
+//        if(index == digits.length()) {//如果遍历完digits，则add
+//            list.add(sb.toString());
+//            return;
+//        }
+//        //记录digits[index]对应的numString
+//        String str = numString[digits.charAt(index) - '0'];
+//
+//        for(int i = 0; i < str.length(); i++) {
+//            //处理元素
+//            sb.append(str.charAt(i));
+//            //递归
+//            backtracking(digits,numString,index + 1);
+//            //回溯处理
+//            sb.deleteCharAt(sb.length() - 1);
+//        }
+//
+//    }
+//}
 
-    List<String> list;
-    StringBuilder sb;
-    public List<String> letterCombinations(String digits) {
-        sb = new StringBuilder();
-        list = new ArrayList<>();
 
-        if(digits == null || digits.isEmpty()) return list;
-
-        //初始对应所有的数字，为了直接对应2-9，新增了两个无效的字符串""
-        String[] numString = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
-        backtracking(digits,numString,0);
-        return list;
-    }
-
-    private void backtracking(String digits,String[] numString, int index) {//index记录当前digits的元素下标
-        if(index == digits.length()) {
-            list.add(sb.toString());
-            return;
-        }
-        String str = numString[digits.charAt(index) - '0'];//记录digits[index]对应数字的string
-        for(int i = 0; i < str.length(); i++) {
-            //收集元素
-            sb.append(str.charAt(i));
-            //递归
-            backtracking(digits,numString,index + 1);
-            //回溯处理
-            sb.deleteCharAt(sb.length() - 1);
-        }
-    }
-}
+//class Solution {
+//
+//    List<String> list;
+//    StringBuilder sb;
+//    public List<String> letterCombinations(String digits) {
+//        sb = new StringBuilder();
+//        list = new ArrayList<>();
+//
+//        if(digits == null || digits.isEmpty()) return list;
+//
+//        //初始对应所有的数字，为了直接对应2-9，新增了两个无效的字符串""
+//        String[] numString = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+//        backtracking(digits,numString,0);
+//        return list;
+//    }
+//
+//    private void backtracking(String digits,String[] numString, int index) {//index记录当前digits的元素下标
+//        if(index == digits.length()) {
+//            list.add(sb.toString());
+//            return;
+//        }
+//        String str = numString[digits.charAt(index) - '0'];//记录digits[index]对应数字的string
+//        for(int i = 0; i < str.length(); i++) {
+//            //收集元素
+//            sb.append(str.charAt(i));
+//            //递归
+//            backtracking(digits,numString,index + 1);
+//            //回溯处理
+//            sb.deleteCharAt(sb.length() - 1);
+//        }
+//    }
+//}
 
 
 
