@@ -1,6 +1,72 @@
 import java.util.*;
 //import java.util.Stack;//最垃圾的类，没有之一
 
+
+/**
+ * leetcode 90 子集Ⅱ
+ * 给你一个整数数组 nums ，其中可能包含重复元素，请你返回该数组所有可能的 子集（幂集）。
+ * 解集 不能 包含重复的子集。返回的解集中，子集可以按 任意顺序 排列。
+ */
+
+class Solution {
+
+    List<List<Integer>> resList = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        if(nums == null || nums.length == 0) return resList;
+
+        //因为此时nums含有重复元素，需要剪枝操作
+        Arrays.sort(nums);
+
+        backtracking(nums,0);
+        return resList;
+    }
+    private void backtracking(int[] nums,int startPos){
+        resList.add(new ArrayList<>(path));//解释了为什么开头就有空元素
+        for(int i = startPos; i < nums.length; i++) {
+            if(i > startPos && nums[i] == nums[i-1]) continue;
+            path.add(nums[i]);
+            backtracking(nums,i+1);
+            path.removeLast();
+        }
+    }
+}
+
+
+/**leetcode.78 子集
+ * 给你一个整数数组 nums ，数组中的元素 互不相同 。返回该数组所有可能的子集（幂集）。
+ * 解集 不能 包含重复的子集。你可以按 任意顺序 返回解集
+ */
+
+//class Solution {
+//    List<List<Integer>> resList = new ArrayList<>();
+//    List<Integer> path = new ArrayList<>();
+//    public List<List<Integer>> subsets(int[] nums) {
+//        if(nums == null || nums.length == 0) return resList;
+//        backtracking(nums,0);
+//        return resList;
+//    }
+//    private void backtracking(int[] nums,int startPos){
+//        resList.add(new ArrayList<>(path));//解释了为什么开头就有空元素
+//        for(int i = startPos; i < nums.length; i++) {
+//            path.add(nums[i]);
+//            backtracking(nums,i+1);
+//            path.removeLast();
+//        }
+//    }
+//}
+
+
+
+
+
+
+
+
+
+
+
 /**
  * leetcode.93 复原ip地址
  * 有效 IP 地址 正好由四个整数（每个整数位于 0 到 255 之间组成，且不能含有前导 0），整数之间用 '.' 分隔。
@@ -8,51 +74,51 @@ import java.util.*;
  * 给定一个只包含数字的字符串 s ，用以表示一个 IP 地址，返回所有可能的有效 IP 地址，这些地址可以通过在 s 中插入 '.' 来形成。你 不能 重新排序或删除 s 中的任何数字。你可以按 任何 顺序返回答案。
  */
 
-class Solution {
-    List<String> resList = new ArrayList<>();
-    List<String> path = new ArrayList<>();
-
-    public List<String> restoreIpAddresses(String s) {
-        //[剪枝操作:]合法的ip长度一定为4~12
-        if(s == null || s.length() < 4 || s.length() > 12) return resList;
-
-        backtracking(s,0);
-        return resList;
-    }
-
-    //回溯函数
-    private void backtracking(String s , int startPos) {
-        if(path.size() == 4) {//已经分了4段ip
-            //【剪枝操作】
-            if(startPos == s.length()) { //只有当恰好分成四段的时候，继续操作，其余直接return
-                String str = String.join(".",path);
-                resList.add(str);
-                return;
-            }
-        }
-
-        for(int i = startPos; i < s.length(); i++){
-            //【剪枝操作】每个地址段的最大长度为3，超过3的直接剪枝
-            if(i - startPos >= 3) return;
-
-            //substring左闭右开
-            String str = s.substring(startPos,i + 1);
-            if(isValidIp(str)) {
-                path.add(str);
-                backtracking(s,i + 1);
-                path.removeLast();
-            }
-        }
-    }
-
-    //验证合法性
-    private boolean isValidIp(String str) {
-        //去除前导0(不存在01这样的地址段)
-        if(str.length() > 1 && str.charAt(0) == '0') return false;
-        int value = Integer.parseInt(str);
-        return 0 <= value && value <= 255;
-    }
-}
+//class Solution {
+//    List<String> resList = new ArrayList<>();
+//    List<String> path = new ArrayList<>();
+//
+//    public List<String> restoreIpAddresses(String s) {
+//        //[剪枝操作:]合法的ip长度一定为4~12
+//        if(s == null || s.length() < 4 || s.length() > 12) return resList;
+//
+//        backtracking(s,0);
+//        return resList;
+//    }
+//
+//    //回溯函数
+//    private void backtracking(String s , int startPos) {
+//        if(path.size() == 4) {//已经分了4段ip
+//            //【剪枝操作】
+//            if(startPos == s.length()) { //只有当恰好分成四段的时候，继续操作，其余直接return
+//                String str = String.join(".",path);
+//                resList.add(str);
+//                return;
+//            }
+//        }
+//
+//        for(int i = startPos; i < s.length(); i++){
+//            //【剪枝操作】每个地址段的最大长度为3，超过3的直接剪枝
+//            if(i - startPos >= 3) return;
+//
+//            //substring左闭右开
+//            String str = s.substring(startPos,i + 1);
+//            if(isValidIp(str)) {
+//                path.add(str);
+//                backtracking(s,i + 1);
+//                path.removeLast();
+//            }
+//        }
+//    }
+//
+//    //验证合法性
+//    private boolean isValidIp(String str) {
+//        //去除前导0(不存在01这样的地址段)
+//        if(str.length() > 1 && str.charAt(0) == '0') return false;
+//        int value = Integer.parseInt(str);
+//        return 0 <= value && value <= 255;
+//    }
+//}
 
 //class Solution {
 //    List<String> resList;
