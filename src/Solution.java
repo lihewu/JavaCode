@@ -2,46 +2,201 @@ import java.util.*;
 //import java.util.Stack;//最垃圾的类，没有之一
 
 /**
+ * leetcode.93 复原ip地址
+ * 有效 IP 地址 正好由四个整数（每个整数位于 0 到 255 之间组成，且不能含有前导 0），整数之间用 '.' 分隔。
+ * 例如："0.1.2.201" 和 "192.168.1.1" 是 有效 IP 地址，但是 "0.011.255.245"、"192.168.1.312" 和 "192.168@1.1" 是 无效 IP 地址。
+ * 给定一个只包含数字的字符串 s ，用以表示一个 IP 地址，返回所有可能的有效 IP 地址，这些地址可以通过在 s 中插入 '.' 来形成。你 不能 重新排序或删除 s 中的任何数字。你可以按 任何 顺序返回答案。
+ */
+
+class Solution {
+    List<String> resList = new ArrayList<>();
+    List<String> path = new ArrayList<>();
+
+    public List<String> restoreIpAddresses(String s) {
+        //[剪枝操作:]合法的ip长度一定为4~12
+        if(s == null || s.length() < 4 || s.length() > 12) return resList;
+
+        backtracking(s,0);
+        return resList;
+    }
+
+    //回溯函数
+    private void backtracking(String s , int startPos) {
+        if(path.size() == 4) {//已经分了4段ip
+            //【剪枝操作】
+            if(startPos == s.length()) { //只有当恰好分成四段的时候，继续操作，其余直接return
+                String str = String.join(".",path);
+                resList.add(str);
+                return;
+            }
+        }
+
+        for(int i = startPos; i < s.length(); i++){
+            //【剪枝操作】每个地址段的最大长度为3，超过3的直接剪枝
+            if(i - startPos >= 3) return;
+
+            //substring左闭右开
+            String str = s.substring(startPos,i + 1);
+            if(isValidIp(str)) {
+                path.add(str);
+                backtracking(s,i + 1);
+                path.removeLast();
+            }
+        }
+    }
+
+    //验证合法性
+    private boolean isValidIp(String str) {
+        //去除前导0(不存在01这样的地址段)
+        if(str.length() > 1 && str.charAt(0) == '0') return false;
+        int value = Integer.parseInt(str);
+        return 0 <= value && value <= 255;
+    }
+}
+
+//class Solution {
+//    List<String> resList;
+//    List<String> path;
+//    public List<String> restoreIpAddresses(String s) {
+//        //剪枝操作，ip最小长度1.1.1.1,最大长度255.255.255.255
+//        if(s == null || s.length() < 4 ||s.length() > 12) return new ArrayList<>();
+//
+//        resList = new ArrayList<>();
+//        path = new ArrayList<>();
+//
+//        backtracking(s,0);
+//        return resList;
+//    }
+//    private void backtracking(String s, int startPos){
+//        if(path.size() == 4) {//分割成四段
+//            //此时正好分完,说明为合法数组
+//            if(startPos == s.length()) {
+//                resList.add(String.join(".",path));
+//                //写这么多毛用没用，Java自带拼接的Api
+////                StringBuilder sb = new StringBuilder();
+////                for(int i = 0; i < path.size(); i++) {//有一说一，用path.size会慢，但是健壮性强
+////                    sb.append(path.get(i));
+////                    if(i != path.size()-1) sb.append(".");
+////                }
+////                list.add(sb.toString());
+//                return;
+//            }
+//        }
+//
+//        for(int i = startPos; i < s.length(); i++){
+//            // 【极致剪枝】：一个合法的 IP 段最多只有 3 位数字，切多了直接跳出循环
+//            if (i - startPos + 1 > 3) break;
+//
+//            //substring左开右闭!
+//            String str = s.substring(startPos,i + 1);
+//            if(isValidIp(str)) {
+//                path.add(str);
+//                backtracking(s,i+1);
+//                path.removeLast();
+//            }
+//        }
+//    }
+//    //判断是否为合法的ip地址
+//    private boolean isValidIp(String str){
+//        //规避前导0(不存在01这样的地址段)
+//        if(str.length() > 1 && str.charAt(0) == '0') return false;
+//        int value = Integer.parseInt(str);
+//        return 0 <= value && value <= 255;
+//    }
+//}
+
+
+
+
+
+
+
+
+/**
+ * leetcode-131 分割回文字符串（回溯算法-分割）
+ * 给你一个字符串 s，请你将 s 分割成一些 子串，使每个子串都是 回文串 。返回 s 所有可能的分割方案。
+ */
+
+//class Solution {
+//    List<List<String>> resList;
+//    List<String> cur;
+//    public List<List<String>> partition(String s) {
+//        if(s == null) return new ArrayList<>();
+//        resList = new ArrayList<>();
+//        cur = new ArrayList<>();
+//
+//        backtracking(s,0,new StringBuilder());
+//        return resList;
+//    }
+//
+//    private void backtracking(String s,int startPos,StringBuilder sb) {
+//        if(startPos == s.length()) {
+//            resList.add(new ArrayList<>(cur));
+//            return;
+//        }
+//        for(int i = startPos; i < s.length(); i++) {
+//            sb.append(s.charAt(i));
+//            if(checkEcho(sb)) {//如果拼接后的sb是 回文字符串
+//                cur.add(sb.toString());
+//                backtracking(s,i+1,new StringBuilder());
+//                cur.removeLast();
+//            }
+//        }
+//    }
+//
+//    private boolean checkEcho(StringBuilder s) {
+//        if(s == null) return true;
+//        for(int i = 0; i < s.length()/2; i++) {
+//            if(s.charAt(i) != s.charAt(s.length() - 1 - i)) return false;
+//        }
+//        return true;
+//    }
+//}
+
+
+
+
+/**
  * leetcode-40:组合总数二
  * 给定一个候选人编号的集合 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
  * candidates 中的每个数字在每个组合中只能使用 一次 。
  * 注意：解集不能包含重复的组合。
  */
 
-class Solution {
-    List<List<Integer>> restList;
-    List<Integer> path;
-    int sum = 0;
-    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
-        if(candidates == null || candidates.length == 0) return new ArrayList<>();
-
-        restList = new ArrayList<>();
-        path = new ArrayList<>();
-        Arrays.sort(candidates);//对数组进行排序
-        backtracking(candidates,target,0);
-        return restList;
-
-    }
-    private void backtracking(int[] candidates,int target,int startPos){
-        if(sum == target){
-            restList.add(new ArrayList<>(path));
-            return;
-        }
-        for(int i = startPos; i < candidates.length; i++) {
-            //基础剪枝,因为candidates已经有序，此时大于target，后续candidates必然也大于
-            if(sum + candidates[i] > target) break;
-            //需要对重复的树干进行拦截
-            if(i > startPos && candidates[i] == candidates[i-1]) {//当i > startPos时，可以看作树的横向遍历
-                continue;//必然和前面一组相同，跳出本次
-            }
-            path.add(candidates[i]);
-            sum += candidates[i];
-            backtracking(candidates,target,i+1);
-            sum -= path.getLast();
-            path.removeLast();
-        }
-    }
-}
+//class Solution {
+//    List<List<Integer>> restList;
+//    List<Integer> path;
+//    int sum = 0;
+//    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+//        if(candidates == null || candidates.length == 0) return new ArrayList<>();
+//
+//        restList = new ArrayList<>();
+//        path = new ArrayList<>();
+//        Arrays.sort(candidates);//对数组进行排序
+//        backtracking(candidates,target,0);
+//        return restList;
+//
+//    }
+//    private void backtracking(int[] candidates,int target,int startPos){
+//        if(sum == target){
+//            restList.add(new ArrayList<>(path));
+//            return;
+//        }
+//        for(int i = startPos; i < candidates.length; i++) {
+//            //基础剪枝,因为candidates已经有序，此时大于target，后续candidates必然也大于
+//            if(sum + candidates[i] > target) break;
+//            //需要对重复的树干进行拦截
+//            if(i > startPos && candidates[i] == candidates[i-1]) {//当i > startPos时，可以看作树的横向遍历
+//                continue;//必然和前面一组相同，跳出本次
+//            }
+//            path.add(candidates[i]);
+//            sum += candidates[i];
+//            backtracking(candidates,target,i+1);
+//            sum -= path.getLast();
+//            path.removeLast();
+//        }
+//    }
+//}
 
 
 
