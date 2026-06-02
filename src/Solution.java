@@ -1,6 +1,156 @@
 import java.util.*;
 //import java.util.Stack;//最垃圾的类，没有之一
 
+/**
+ * N皇后问题
+ */
+
+class Solution {
+    List<List<String>> res = new ArrayList<>();
+
+    public List<List<String>> solveNQueens(int n) {
+        char[][] chessboard = new char[n][n];
+        for (char[] c : chessboard) {
+            Arrays.fill(c, '.');
+        }
+        backTrack(n, 0, chessboard);
+        return res;
+    }
+
+
+    public void backTrack(int n, int row, char[][] chessboard) {
+        if (row == n) {
+            res.add(Array2List(chessboard));
+            return;
+        }
+
+        for (int col = 0;col < n; ++col) {
+            if (isValid (row, col, n, chessboard)) {
+                chessboard[row][col] = 'Q';
+                backTrack(n, row+1, chessboard);
+                chessboard[row][col] = '.';
+            }
+        }
+
+    }
+
+
+    public List Array2List(char[][] chessboard) {
+        List<String> list = new ArrayList<>();
+
+        for (char[] c : chessboard) {
+            list.add(String.copyValueOf(c));
+        }
+        return list;
+    }
+
+
+    public boolean isValid(int row, int col, int n, char[][] chessboard) {
+        // 检查列
+        for (int i=0; i<row; ++i) { // 相当于剪枝
+            if (chessboard[i][col] == 'Q') {
+                return false;
+            }
+        }
+
+        // 检查45度对角线
+        for (int i=row-1, j=col-1; i>=0 && j>=0; i--, j--) {
+            if (chessboard[i][j] == 'Q') {
+                return false;
+            }
+        }
+
+        // 检查135度对角线
+        for (int i=row-1, j=col+1; i>=0 && j<=n-1; i--, j++) {
+            if (chessboard[i][j] == 'Q') {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+/**
+ * leetcode47.回溯算法-排列-全排列2
+ * 给定一个可包含重复数字的序列 nums ，按任意顺序 返回所有不重复的全排列。
+ */
+
+//class Solution {
+//    List<List<Integer>> resList = new ArrayList<>();
+//    List<Integer> path = new ArrayList<>();
+//    boolean[] used;
+//
+//    public List<List<Integer>> permuteUnique(int[] nums) {
+//        if(nums == null || nums.length == 0) return resList;
+//
+//        used = new boolean[nums.length];
+//        Arrays.fill(used,false);
+//        Arrays.sort(nums);
+//        backtracking(nums);
+//        return resList;
+//    }
+//    private void backtracking(int[] nums) {
+//        if(path.size() == nums.length) {
+//            resList.add(new ArrayList<>(path));
+//            return;
+//        }
+//        for(int i = 0; i < nums.length; i++){
+//            if(used[i]) continue;
+//            //核心语句,只有当前的nums[i-1]相同，且未被used（说明后面还要再use），说明重复，需要剪枝
+//            if(i > 0 && nums[i] == nums[i-1] && !used[i - 1]) continue;
+//
+//            path.add(nums[i]);
+//            used[i] = true;
+//            backtracking(nums);
+//            used[i] = false;
+//            path.removeLast();
+//        }
+//    }
+//}
+
+
+
+
+
+/**
+ * leetcode46.回溯算法-排列-全排列
+ * 给定一个不含重复数字的数组 nums ，返回其 所有可能的全排列 。你可以 按任意顺序 返回答案。
+ */
+
+//
+//class Solution {
+//    List<List<Integer>> resList = new ArrayList<>();
+//    List<Integer> path = new ArrayList<>();
+//    //用于记录本层是否用过该元素
+//    boolean[] used;
+//
+//    public List<List<Integer>> permute(int[] nums) {
+//        if(nums == null || nums.length == 0) return resList;
+//        //重新实例化当前数组
+//        used = new boolean[nums.length];
+//        backtracking(nums);
+//        return resList;
+//    }
+//    private void backtracking(int[] nums){
+//        if(path.size() == nums.length) {
+//            resList.add(new ArrayList<>(path));
+//            return;
+//        }
+//        for(int i = 0; i < nums.length; i++) {
+//            //如果本层中，当前元素以及被使用，则跳过该元素
+//            if(used[i]) continue;
+//
+//            used[i] = true;//use了num[i]
+//            path.add(nums[i]);
+//            backtracking(nums);
+//            used[i] = false;//归还的时候，必须也要归还nums[i]
+//            path.removeLast();
+//        }
+//    }
+//}
+
+
+
 
 /**
  * leetcode491.非递减子序列
@@ -8,36 +158,36 @@ import java.util.*;
  * 数组中可能含有重复元素，如出现两个整数相等，也可以视作递增序列的一种特殊情况
  */
 
-class Solution {
-
-    List<List<Integer>> resList = new ArrayList<>();
-    List<Integer> path = new ArrayList<>();
-
-    public List<List<Integer>> findSubsequences(int[] nums) {
-        if(nums == null || nums.length == 0) return resList;
-        backtracking(nums,0);
-        return resList;
-    }
-    private void backtracking(int[] nums, int startPos) {
-        if(path.size() >= 2) {
-            resList.add(new ArrayList<>(path));
-        }
-
-        Set<Integer> set = new HashSet<>();
-
-        for(int i = startPos; i < nums.length; i++) {
-            //一定要注意，getLast()和getFirst的防空处理
-            if(path.isEmpty() || nums[i] >= path.getLast()) {
-                if(!set.contains(nums[i])) {
-                    set.add(nums[i]);
-                    path.add(nums[i]);
-                    backtracking(nums,i+1);
-                    path.removeLast();
-                }
-            }
-        }
-    }
-}
+//class Solution {
+//
+//    List<List<Integer>> resList = new ArrayList<>();
+//    List<Integer> path = new ArrayList<>();
+//
+//    public List<List<Integer>> findSubsequences(int[] nums) {
+//        if(nums == null || nums.length == 0) return resList;
+//        backtracking(nums,0);
+//        return resList;
+//    }
+//    private void backtracking(int[] nums, int startPos) {
+//        if(path.size() >= 2) {
+//            resList.add(new ArrayList<>(path));
+//        }
+//
+//        Set<Integer> set = new HashSet<>();
+//
+//        for(int i = startPos; i < nums.length; i++) {
+//            //一定要注意，getLast()和getFirst的防空处理
+//            if(path.isEmpty() || nums[i] >= path.getLast()) {
+//                if(!set.contains(nums[i])) {
+//                    set.add(nums[i]);
+//                    path.add(nums[i]);
+//                    backtracking(nums,i+1);
+//                    path.removeLast();
+//                }
+//            }
+//        }
+//    }
+//}
 
 
 
