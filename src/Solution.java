@@ -3,9 +3,9 @@ import java.util.*;
 
 
 /**
- * leetcode 90 子集Ⅱ
- * 给你一个整数数组 nums ，其中可能包含重复元素，请你返回该数组所有可能的 子集（幂集）。
- * 解集 不能 包含重复的子集。返回的解集中，子集可以按 任意顺序 排列。
+ * leetcode491.非递减子序列
+ * 给你一个整数数组 nums ，找出并返回所有该数组中不同的递增子序列，递增子序列中 至少有两个元素 。你可以按 任意顺序 返回答案。
+ * 数组中可能含有重复元素，如出现两个整数相等，也可以视作递增序列的一种特殊情况
  */
 
 class Solution {
@@ -13,25 +13,64 @@ class Solution {
     List<List<Integer>> resList = new ArrayList<>();
     List<Integer> path = new ArrayList<>();
 
-    public List<List<Integer>> subsetsWithDup(int[] nums) {
+    public List<List<Integer>> findSubsequences(int[] nums) {
         if(nums == null || nums.length == 0) return resList;
-
-        //因为此时nums含有重复元素，需要剪枝操作
-        Arrays.sort(nums);
-
         backtracking(nums,0);
         return resList;
     }
-    private void backtracking(int[] nums,int startPos){
-        resList.add(new ArrayList<>(path));//解释了为什么开头就有空元素
+    private void backtracking(int[] nums, int startPos) {
+        if(path.size() >= 2) {
+            resList.add(new ArrayList<>(path));
+        }
+
+        Set<Integer> set = new HashSet<>();
+
         for(int i = startPos; i < nums.length; i++) {
-            if(i > startPos && nums[i] == nums[i-1]) continue;
-            path.add(nums[i]);
-            backtracking(nums,i+1);
-            path.removeLast();
+            //一定要注意，getLast()和getFirst的防空处理
+            if(path.isEmpty() || nums[i] >= path.getLast()) {
+                if(!set.contains(nums[i])) {
+                    set.add(nums[i]);
+                    path.add(nums[i]);
+                    backtracking(nums,i+1);
+                    path.removeLast();
+                }
+            }
         }
     }
 }
+
+
+
+/**
+ * leetcode 90 子集Ⅱ
+ * 给你一个整数数组 nums ，其中可能包含重复元素，请你返回该数组所有可能的 子集（幂集）。
+ * 解集 不能 包含重复的子集。返回的解集中，子集可以按 任意顺序 排列。
+ */
+
+//class Solution {
+//
+//    List<List<Integer>> resList = new ArrayList<>();
+//    List<Integer> path = new ArrayList<>();
+//
+//    public List<List<Integer>> subsetsWithDup(int[] nums) {
+//        if(nums == null || nums.length == 0) return resList;
+//
+//        //因为此时nums含有重复元素，需要剪枝操作
+//        Arrays.sort(nums);
+//
+//        backtracking(nums,0);
+//        return resList;
+//    }
+//    private void backtracking(int[] nums,int startPos){
+//        resList.add(new ArrayList<>(path));//解释了为什么开头就有空元素
+//        for(int i = startPos; i < nums.length; i++) {
+//            if(i > startPos && nums[i] == nums[i-1]) continue;
+//            path.add(nums[i]);
+//            backtracking(nums,i+1);
+//            path.removeLast();
+//        }
+//    }
+//}
 
 
 /**leetcode.78 子集
