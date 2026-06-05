@@ -1,74 +1,319 @@
 import java.util.*;
 //import java.util.Stack;//最垃圾的类，没有之一
 
+
+/**
+ * 正式进入-贪心算法greedyProblem
+ */
+
+
+/**
+ * 1005.k次取反后的最大值
+ * 给你一个整数数组 nums 和一个整数 k ，按以下方法修改该数组：
+ * 选择某个下标 i 并将 nums[i] 替换为 -nums[i] 。
+ * 重复这个过程恰好 k 次。可以多次选择同一个下标 i 。
+ * 以这种方式修改数组后，返回数组 可能的最大和
+ */
+
+
+class Solution {
+    public int largestSumAfterKNegations(int[] nums, int k) {
+        if(nums == null || nums.length == 0) return 0;
+
+        int sum = 0;
+
+        Arrays.sort(nums);
+        //先把可以反转的负数反转了
+        for(int i = 0 ; i < nums.length; i++) {
+            //当可以反转，且待处理的元素为负时
+            if(k > 0 && nums[i] < 0) {
+                nums[i] = -nums[i];
+                k--;
+            }
+        }
+        //处理剩余的k
+        if(k % 2 == 1) {
+            int minPos = 0;
+            //遍历，而非排序（因为排序是o(nlogn)）
+            for(int i = 1; i < nums.length; i++) {
+                if(nums[i] < nums[minPos]) minPos = i;
+            }
+            nums[minPos] = -nums[minPos];
+        }
+        //求和
+        for(int i : nums) {
+            sum += i;
+        }
+        return sum;
+    }
+}
+
+
+/**
+ * leetcode45.跳跃游戏Ⅱ
+ * 给定一个长度为 n 的 0 索引整数数组 nums。初始位置在下标 0。
+ * 每个元素 nums[i] 表示从索引 i 向后跳转的最大长度。换句话说，如果你在索引 i 处，你可以跳转到任意 (i + j) 处：
+ * 0 <= j <= nums[i] 且 i + j < n
+ * 返回到达 n - 1 的最小跳跃次数。测试用例保证可以到达 n - 1
+ */
+
+//class Solution {
+//    public int jump(int[] nums) {
+//        if(nums == null || nums.length <= 1) return 0;
+//        int count = 0;//记录跳跃次数
+//        //当前遍历中，能跳的最远距离
+//        int curDistance = 0;
+//        //最大能跳跃范围
+//        int maxDistance = 0;
+//        for(int i = 0; i < nums.length; i++) {
+//            //时刻更新能到达的最远distance
+//            maxDistance = Math.max(maxDistance,i + nums[i]);
+//
+//            //如果遍历到起跳的最远距离,说明必须进行下一跳才能继续
+//            if(i == curDistance) {
+//                count++;
+//                curDistance = maxDistance;
+//            }
+//        }
+//        return count;
+//    }
+//
+//}
+
+
+/**
+ * leetcode55.跳跃游戏
+ * 给你一个非负整数数组 nums ，你最初位于数组的 第一个下标 。数组中的每个元素代表你在该位置可以跳跃的最大长度。
+ * 判断你是否能够到达最后一个下标，如果可以，返回 true ；否则，返回 false
+ */
+//
+//class Solution {
+//    public boolean canJump(int[] nums) {
+//        if(nums == null || nums.length == 0) return false;
+//        //记录跳的最远的位置
+//        int cover = 0;
+//        for(int i = 0; i <= cover; i++) {
+//            cover = Math.max(cover,i + nums[i]);
+//            if(cover >= nums.length - 1) return true;
+//        }
+//        return false;
+//    }
+//}
+
+
+
+/**
+ * 122.买卖股票的最佳时机
+ * 给你一个整数数组 prices ，其中 prices[i] 表示某支股票第 i 天的价格。
+ * 在每一天，你可以决定是否购买和/或出售股票。你在任何时候 最多 只能持有 一股 股票。
+ * 然而，你可以在 同一天 多次买卖该股票，但要确保你持有的股票不超过一股。
+ * 返回 你能获得的 最大 利润
+ */
+
+
+//class Solution {
+//    public int maxProfit(int[] prices) {
+//        if(prices == null || prices.length == 0) return 0;
+//        //初始利润为0
+//        int profit = 0;
+//        for(int i = 1; i < prices.length; i++){
+//            if(prices[i] > prices[i - 1]) {
+//                //如果当前股票为上升趋势
+//                profit += prices[i] - prices[i - 1];
+//            }
+//        }
+//        return profit;
+//    }
+//}
+
+
+
+/**
+ * 53.最大子数组和
+ * 给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+ * 子数组是数组中的一个连续部分。
+ */
+
+//class Solution {
+//    public int maxSubArray(int[] nums) {
+//        if(nums == null || nums.length == 0) return 0;
+//        int max = Integer.MIN_VALUE;
+//        int sum = 0;
+//        for(int i = 0; i < nums.length; i++) {
+//            sum += nums[i];
+//            if(sum > max) max = sum;
+//            //贪心算法的核心:如果sum已经<0，说明前面的累加已经无意义，该丢弃的丢弃
+//            if(sum < 0) sum = 0;
+//        }
+//        return max;
+//    }
+//}
+
+
+/**
+ * 376.摆动序列
+ * 如果连续数字之间的差严格地在正数和负数之间交替，则数字序列称为 摆动序列
+ * 第一个差（如果存在的话）可能是正数或负数。仅有一个元素或者含两个不等元素的序列也视作摆动序列。
+ * 例如， [1, 7, 4, 9, 2, 5] 是一个 摆动序列 ，因为差值 (6, -3, 5, -7, 3) 是正负交替出现的。
+ * 相反，[1, 4, 7, 2, 5] 和 [1, 7, 4, 5, 5] 不是摆动序列，第一个序列是因为它的前两个差值都是正数，第二个序列是因为它的最后一个差值为零。
+ * 子序列 可以通过从原始序列中删除一些（也可以不删除）元素来获得，剩下的元素保持其原始顺序。
+ * 给你一个整数数组 nums ，返回 nums 中作为 摆动序列 的 最长子序列的长度
+ */
+
+//class Solution {
+//    public int wiggleMaxLength(int[] nums) {
+//        if(nums.length < 2) return nums.length;
+//
+//        //只要长度>1,最小子序列长一定为1
+//        int maxLength = 1;
+//        int pre = 0;
+//        int cur = 0;
+//
+//        for(int i = 1; i < nums.length; i++) {
+//            cur = nums[i] - nums[i-1];
+//            // 核心判断：出现峰谷（允许 preDiff = 0，为了兼容初始起点和平坡的情况）
+//            if ( (pre<=0 && cur > 0) || (pre >= 0 && cur <0) )  {
+//                maxLength++;
+//                //千万不要写在外面，需要记录具有方向的梯度
+//                pre = cur;
+//            }
+//        }
+//        return maxLength;
+//    }
+//}
+
+
+
+
+/**
+ 2410. 运动员和训练师的最大匹配数
+ 给你一个下标从 0 开始的整数数组 players ，其中 players[i] 表示第 i 名运动员的 能力 值，
+ 同时给你一个下标从 0 开始的整数数组 trainers ，其中 trainers[j] 表示第 j 名训练师的 训练能力值 。
+ 如果第 i 名运动员的能力值 小于等于 第 j 名训练师的能力值，那么第 i 名运动员可以 匹配 第 j 名训练师。
+ 除此以外，每名运动员至多可以匹配一位训练师，每位训练师最多可以匹配一位运动员。
+ 请你返回满足上述要求 players 和 trainers 的 最大 匹配数。
+ */
+
+//class Solution {
+//    public int matchPlayersAndTrainers(int[] players, int[] trainers) {
+//        if(players == null || players.length == 0 || trainers == null || trainers.length == 0) return 0;
+//        int count = 0;
+//        Arrays.sort(players);
+//        Arrays.sort(trainers);
+//        int i = players.length - 1;
+//        int j = trainers.length - 1;
+//        while(i >= 0 && j >= 0) {
+//            if(players[i] <= trainers[j]) {
+//                j--;
+//                count++;
+//            }
+//            i--;
+//        }
+//        return count;
+//    }
+//}
+
+
+/**
+ * 455.分配饼干
+ * 假设你是一位很棒的家长，想要给你的孩子们一些小饼干。但是，每个孩子最多只能给一块饼干。
+ * 对每个孩子 i，都有一个胃口值 g[i]，这是能让孩子们满足胃口的饼干的最小尺寸；
+ * 并且每块饼干 j，都有一个尺寸 s[j] 。如果 s[j] >= g[i]，我们可以将这个饼干 j 分配给孩子 i ，这个孩子会得到满足。
+ * 你的目标是满足尽可能多的孩子，并输出这个最大数值。
+ */
+
+//class Solution {
+//    public int findContentChildren(int[] g, int[] s) {
+//        //依旧排序
+//        Arrays.sort(g);
+//        Arrays.sort(s);
+//        int count = 0;
+//        int sPos = s.length - 1;
+//        int gPos = g.length - 1;
+//        while(sPos >= 0 && gPos >= 0) {//当有一份满足时，结束
+//            if(s[sPos] >= g[gPos]) {
+//                sPos--;
+//                count++;
+//            }
+//            gPos--;
+//        }
+//        return count;
+//    }
+//}
+
+
+/**
+ * 正式进入-回溯算法
+ */
+
 /**
  * N皇后问题
  */
-
-class Solution {
-    List<List<String>> res = new ArrayList<>();
-
-    public List<List<String>> solveNQueens(int n) {
-        char[][] chessboard = new char[n][n];
-        for (char[] c : chessboard) {
-            Arrays.fill(c, '.');
-        }
-        backTrack(n, 0, chessboard);
-        return res;
-    }
-
-
-    public void backTrack(int n, int row, char[][] chessboard) {
-        if (row == n) {
-            res.add(Array2List(chessboard));
-            return;
-        }
-
-        for (int col = 0;col < n; ++col) {
-            if (isValid (row, col, n, chessboard)) {
-                chessboard[row][col] = 'Q';
-                backTrack(n, row+1, chessboard);
-                chessboard[row][col] = '.';
-            }
-        }
-
-    }
-
-
-    public List Array2List(char[][] chessboard) {
-        List<String> list = new ArrayList<>();
-
-        for (char[] c : chessboard) {
-            list.add(String.copyValueOf(c));
-        }
-        return list;
-    }
-
-
-    public boolean isValid(int row, int col, int n, char[][] chessboard) {
-        // 检查列
-        for (int i=0; i<row; ++i) { // 相当于剪枝
-            if (chessboard[i][col] == 'Q') {
-                return false;
-            }
-        }
-
-        // 检查45度对角线
-        for (int i=row-1, j=col-1; i>=0 && j>=0; i--, j--) {
-            if (chessboard[i][j] == 'Q') {
-                return false;
-            }
-        }
-
-        // 检查135度对角线
-        for (int i=row-1, j=col+1; i>=0 && j<=n-1; i--, j++) {
-            if (chessboard[i][j] == 'Q') {
-                return false;
-            }
-        }
-        return true;
-    }
-}
+//
+//class Solution {
+//    List<List<String>> res = new ArrayList<>();
+//
+//    public List<List<String>> solveNQueens(int n) {
+//        char[][] chessboard = new char[n][n];
+//        for (char[] c : chessboard) {
+//            Arrays.fill(c, '.');
+//        }
+//        backTrack(n, 0, chessboard);
+//        return res;
+//    }
+//
+//
+//    public void backTrack(int n, int row, char[][] chessboard) {
+//        if (row == n) {
+//            res.add(Array2List(chessboard));
+//            return;
+//        }
+//
+//        for (int col = 0;col < n; ++col) {
+//            if (isValid (row, col, n, chessboard)) {
+//                chessboard[row][col] = 'Q';
+//                backTrack(n, row+1, chessboard);
+//                chessboard[row][col] = '.';
+//            }
+//        }
+//
+//    }
+//
+//
+//    public List Array2List(char[][] chessboard) {
+//        List<String> list = new ArrayList<>();
+//
+//        for (char[] c : chessboard) {
+//            list.add(String.copyValueOf(c));
+//        }
+//        return list;
+//    }
+//
+//
+//    public boolean isValid(int row, int col, int n, char[][] chessboard) {
+//        // 检查列
+//        for (int i=0; i<row; ++i) { // 相当于剪枝
+//            if (chessboard[i][col] == 'Q') {
+//                return false;
+//            }
+//        }
+//
+//        // 检查45度对角线
+//        for (int i=row-1, j=col-1; i>=0 && j>=0; i--, j--) {
+//            if (chessboard[i][j] == 'Q') {
+//                return false;
+//            }
+//        }
+//
+//        // 检查135度对角线
+//        for (int i=row-1, j=col+1; i>=0 && j<=n-1; i--, j++) {
+//            if (chessboard[i][j] == 'Q') {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+//}
 
 /**
  * leetcode47.回溯算法-排列-全排列2
