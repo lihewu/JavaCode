@@ -6,6 +6,163 @@ import java.util.*;
  * 正式进入-贪心算法greedyProblem
  */
 
+/**
+ * 860.柠檬水找零
+ * 在柠檬水摊上，每一杯柠檬水的售价为 5 美元。顾客排队购买你的产品，（按账单 bills 支付的顺序）一次购买一杯。
+ * 每位顾客只买一杯柠檬水，然后向你付 5 美元、10 美元或 20 美元。你必须给每个顾客正确找零，也就是说净交易是每位顾客向你支付 5 美元。
+ * 注意，一开始你手头没有任何零钱。
+ * 给你一个整数数组 bills ，其中 bills[i] 是第 i 位顾客付的账。如果你能给每位顾客正确找零，返回 true ，否则返回 false 。
+ */
+
+class Solution {
+    public boolean lemonadeChange(int[] bills) {
+        int moneyFive = 0;
+        int moneyTen = 0;
+        for(int i = 0; i < bills.length; i++) {
+            if(bills[i] == 5) moneyFive ++;
+            if(bills[i] == 10) {
+                moneyFive--;
+                moneyTen++;
+            }
+            if(bills[i] == 20) {
+                if(moneyTen > 0) {//如果有十元钱，优先用十元钱
+                    moneyTen--;
+                }else {
+                    moneyFive -= 2;
+                }
+                moneyFive--;
+            }
+
+            if(moneyTen < 0 || moneyFive < 0) return false;
+        }
+        return true;
+    }
+}
+
+
+/**
+ * 406.根据身高重建队列
+ * 假设有打乱顺序的一群人站成一个队列，数组 people 表示队列中一些人的属性。
+ * 每个 people[i] = [hi, ki] 表示第 i 个人的身高为 hi ，前面 正好 有 ki 个身高大于或等于 hi 的人。
+ * 请你重新构造并返回输入数组 people 所表示的队列。
+ * 返回的队列应该格式化为数组 queue ，其中 queue[j] = [hj, kj] 是队列中第 j 个人的属性（queue[0] 是排在队列前面的人）
+ */
+
+
+//
+//class Solution {
+//    public int[][] reconstructQueue(int[][] people) {
+//        if(people == null) return new int[0][0];
+//        //同样是两次贪心，但是可以进行内部排序
+//        //对身高进行排序，身高较高的人排在前面
+//        Arrays.sort(people,(a,b) -> {
+//            //如果身高相同，对k进行升序排列
+//            if(a[0] == b[0]) return a[1] - b[1];
+//            return b[0] - a[0];
+//        });
+//        //建立一个队列用来进行插入操作
+//        List<int[]> queue = new ArrayList<>();
+//        //奇迹出现，每次选取都是当前最大且最靠前的people
+//        for(int[] i : people) {
+//            //把i插入到k的位置中(因为每次选取都是当前最大值，如果想要满足前面有k个人，一定会插入到index = k的位置)
+//            queue.add(i[1],i);
+//        }
+//        return queue.toArray(new int[people.length][]);
+//    }
+//}
+
+
+
+/**
+ * 135.分糖果
+ * n 个孩子站成一排。给你一个整数数组 ratings 表示每个孩子的评分。
+ * 你需要按照以下要求，给这些孩子分发糖果：
+ * 每个孩子至少分配到 1 个糖果。
+ * 相邻两个孩子中，评分更高的那个会获得更多的糖果。
+ * 请你给每个孩子分发糖果，计算并返回需要准备的 最少糖果数目 。
+ */
+
+
+//class Solution {
+//    public int candy(int[] ratings) {
+//        if(ratings == null || ratings.length == 0) return 0;
+//        //建立数组存储每个人的糖果数量
+//        int[] candy = new int[ratings.length];
+//        Arrays.fill(candy,1);
+//
+//        //第一次贪心，比左边大就比左边+1
+//        for(int i = 1; i < ratings.length; i++){//左边界边界默认为1
+//            if(ratings[i] > ratings[i-1]) candy[i] = candy[i-1] + 1;
+//        }
+//        //第二次贪心:比右边大就比右边多1
+//        for(int i = ratings.length - 2; i >= 0; i--) {//右边界默认为1
+//            if(ratings[i] > ratings[i+1]) candy[i] = Math.max(candy[i+1] + 1,candy[i]);
+//        }
+//
+//        int sum = 0;
+//        for(int i : candy) {
+//            sum += i;
+//        }
+//        return sum;
+//    }
+//}
+
+
+
+/**
+ * 134.加油站
+ * 在一条环路上有 n 个加油站，其中第 i 个加油站有汽油 gas[i] 升。
+ * 你有一辆油箱容量无限的的汽车，从第 i 个加油站开往第 i+1 个加油站需要消耗汽油 cost[i] 升。你从其中的一个加油站出发，开始时油箱为空。
+ * 给定两个整数数组 gas 和 cost ，如果你可以按顺序绕环路行驶一周，则返回出发时加油站的编号，否则返回 -1 。如果存在解，则 保证 它是 唯一 的
+ */
+
+//贪心找最小:
+//class Solution {
+//    public int canCompleteCircuit(int[] gas, int[] cost) {
+//        int totalSum = 0;//全程的燃油结余
+//        int curSum = 0;//当前节点出发的燃油结余
+//        int startPos = 0;
+//        for(int i = 0; i < gas.length; i++) {
+//            //当前站点出发的燃油结余
+//            int rest = gas[i] - cost[i];
+//            //计算燃油总量
+//            totalSum += rest;
+//            curSum += rest;
+//
+//            if(curSum < 0) {//如果当前节点出发的燃油结余<0，说明cur站点出发无法通行，中间站点也一定为负
+//                curSum = 0;
+//                startPos = i + 1;
+//            }
+//        }
+//        //若燃油总量<耗油总量，则不存在可行性
+//        if(totalSum < 0) return -1;
+//        return startPos;
+//    }
+//}
+
+//暴力解:
+//class Solution {
+//    public int canCompleteCircuit(int[] gas, int[] cost) {
+//        if(gas == null || gas.length == 0 || cost == null || cost.length == 0) return -1;
+//        //for循环用于从头到尾遍历
+//        for(int i = 0; i < gas.length; i++) {
+//            //表示剩余汽油含量
+//            int rest = gas[i] - cost[i];
+//            //记录坐标位置
+//            int index = (i + 1) % gas.length;
+//            //while用于环形遍历
+//            while(index != i && rest > 0) {
+//                rest += gas[index] - cost[index];
+//                index = (index + 1) % gas.length;
+//            }
+//            //一定要这样写，不然到无法处理到终点时 rest = 0的情况
+//            if(rest >= 0 && index == i) return i;
+//        }
+//        return -1;
+//    }
+//}
+
+
 
 /**
  * 1005.k次取反后的最大值
@@ -16,37 +173,37 @@ import java.util.*;
  */
 
 
-class Solution {
-    public int largestSumAfterKNegations(int[] nums, int k) {
-        if(nums == null || nums.length == 0) return 0;
-
-        int sum = 0;
-
-        Arrays.sort(nums);
-        //先把可以反转的负数反转了
-        for(int i = 0 ; i < nums.length; i++) {
-            //当可以反转，且待处理的元素为负时
-            if(k > 0 && nums[i] < 0) {
-                nums[i] = -nums[i];
-                k--;
-            }
-        }
-        //处理剩余的k
-        if(k % 2 == 1) {
-            int minPos = 0;
-            //遍历，而非排序（因为排序是o(nlogn)）
-            for(int i = 1; i < nums.length; i++) {
-                if(nums[i] < nums[minPos]) minPos = i;
-            }
-            nums[minPos] = -nums[minPos];
-        }
-        //求和
-        for(int i : nums) {
-            sum += i;
-        }
-        return sum;
-    }
-}
+//class Solution {
+//    public int largestSumAfterKNegations(int[] nums, int k) {
+//        if(nums == null || nums.length == 0) return 0;
+//
+//        int sum = 0;
+//
+//        Arrays.sort(nums);
+//        //先把可以反转的负数反转了
+//        for(int i = 0 ; i < nums.length; i++) {
+//            //当可以反转，且待处理的元素为负时
+//            if(k > 0 && nums[i] < 0) {
+//                nums[i] = -nums[i];
+//                k--;
+//            }
+//        }
+//        //处理剩余的k
+//        if(k % 2 == 1) {
+//            int minPos = 0;
+//            //遍历，而非排序（因为排序是o(nlogn)）
+//            for(int i = 1; i < nums.length; i++) {
+//                if(nums[i] < nums[minPos]) minPos = i;
+//            }
+//            nums[minPos] = -nums[minPos];
+//        }
+//        //求和
+//        for(int i : nums) {
+//            sum += i;
+//        }
+//        return sum;
+//    }
+//}
 
 
 /**
