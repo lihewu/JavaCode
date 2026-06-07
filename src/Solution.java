@@ -6,6 +6,121 @@ import java.util.*;
  * 正式进入-贪心算法greedyProblem
  */
 
+
+/**
+ * 763.划分字母区间
+ * 给你一个字符串 s 。我们要把这个字符串划分为尽可能多的片段，同一字母最多出现在一个片段中。
+ * 例如，字符串 "ababcc" 能够被分为 ["abab", "cc"]，但类似 ["aba", "bcc"] 或 ["ab", "ab", "cc"] 的划分是非法的。
+ * 注意，划分结果需要满足：将所有划分结果按顺序连接，得到的字符串仍然是 s 。
+ * 返回一个表示每个字符串片段的长度的列表。
+ */
+
+
+class Solution {
+    public List<Integer> partitionLabels(String s) {
+        if(s == null) return new ArrayList<>();
+
+        List<Integer> resList = new ArrayList<>();
+        //记录每个字母最后一次出现在char[]的下标
+        int[] lastIndex = new int[26];
+        char[] str = s.toCharArray();
+
+        for(int i = 0; i < str.length; i++) {
+            lastIndex[str[i] - 'a'] = i;
+        }
+        //记录当前已经遍历元素的最大下标
+        int maxIndex = 0;
+        //记录先前内容的最后Index
+        int preLast = -1;
+        for(int i = 0; i < str.length; i++) {
+            //当前已经包含的元素最远位置
+            maxIndex = Math.max(maxIndex,lastIndex[str[i] - 'a']);
+            if(i == maxIndex) {
+                resList.add(i - preLast);
+                preLast = i;
+            }
+        }
+        return resList;
+    }
+}
+
+
+
+/**
+ * 435.无重叠区域
+ * 给定一个区间的集合 intervals ，其中 intervals[i] = [starti, endi] 。返回 需要移除区间的最小数量，使剩余区间互不重叠
+ * 注意 只在一点上接触的区间是 不重叠的。例如 [1, 2] 和 [2, 3] 是不重叠的
+ */
+
+
+//class Solution {
+//    public int eraseOverlapIntervals(int[][] intervals) {
+//        if(intervals == null || intervals.length == 0) return 0;
+//
+//        int count = 0;
+//        //直接按照右边界排序
+//        Arrays.sort(intervals,Comparator.comparing(a -> a[1]));
+//        for(int i = 1; i < intervals.length; i++) {
+//            //发生重叠
+//            if(intervals[i][0] < intervals[i-1][1]) {
+//                count++;
+//                intervals[i][1] = Math.min(intervals[i][1],intervals[i-1][1]);
+//            }
+//        }
+//        return count;
+//    }
+//}
+
+//class Solution {
+//    public int eraseOverlapIntervals(int[][] intervals) {
+//        if(intervals == null || intervals.length == 0) return 0;
+//
+//        //根据左边界排序
+//        Arrays.sort(intervals,Comparator.comparing(a -> a[0]));
+//        int count = 0;
+//        for(int i = 1; i < intervals.length; i++) {
+//            //如果边界重合
+//            if(intervals[i][0] < intervals[i-1][1]) {
+//                intervals[i][1] = Math.min(intervals[i-1][1],intervals[i][1]);
+//                count++;
+//            }
+//        }
+//        return count;
+//    }
+//}
+
+
+
+/**
+ * 425.最小箭头数
+ * 有一些球形气球贴在一堵用 XY 平面表示的墙面上。
+ * 墙面上的气球记录在整数数组 points ，其中points[i] = [xstart, xend] 表示水平直径在 xstart 和 xend之间的气球。你不知道气球的确切 y 坐标。
+ * 一支弓箭可以沿着 x 轴从不同点 完全垂直 地射出。
+ * 在坐标 x 处射出一支箭，若有一个气球的直径的开始和结束坐标为 xstart，xend，
+ * 且满足  xstart ≤ x ≤ xend，则该气球会被 引爆 。可以射出的弓箭的数量 没有限制 。 弓箭一旦被射出之后，可以无限地前进。
+ * 给你一个数组 points ，返回引爆所有气球所必须射出的 最小 弓箭数 。
+ */
+
+//class Solution {
+//    public int findMinArrowShots(int[][] points) {
+//        if(points == null || points.length == 0) return 0;
+//
+//        Arrays.sort(points, Comparator.comparingInt(a -> a[0]));
+//        //只要数组非空,必定需要一个
+//        int count = 1;
+//        for(int i = 1; i < points.length; i++) {
+//            if(points[i][0] > points[i-1][1]) {//如果当前气球左边界 > 重叠气球右边界，需要新的弓箭
+//                count++;
+//            } else {
+//                //将重叠区域的右边界更改为旧重叠区域 与新气球的最小右边界
+//                points[i][1] = Math.min(points[i][1],points[i-1][1]);
+//            }
+//        }
+//        return count;
+//    }
+//}
+
+
 /**
  * 860.柠檬水找零
  * 在柠檬水摊上，每一杯柠檬水的售价为 5 美元。顾客排队购买你的产品，（按账单 bills 支付的顺序）一次购买一杯。
@@ -13,31 +128,31 @@ import java.util.*;
  * 注意，一开始你手头没有任何零钱。
  * 给你一个整数数组 bills ，其中 bills[i] 是第 i 位顾客付的账。如果你能给每位顾客正确找零，返回 true ，否则返回 false 。
  */
-
-class Solution {
-    public boolean lemonadeChange(int[] bills) {
-        int moneyFive = 0;
-        int moneyTen = 0;
-        for(int i = 0; i < bills.length; i++) {
-            if(bills[i] == 5) moneyFive ++;
-            if(bills[i] == 10) {
-                moneyFive--;
-                moneyTen++;
-            }
-            if(bills[i] == 20) {
-                if(moneyTen > 0) {//如果有十元钱，优先用十元钱
-                    moneyTen--;
-                }else {
-                    moneyFive -= 2;
-                }
-                moneyFive--;
-            }
-
-            if(moneyTen < 0 || moneyFive < 0) return false;
-        }
-        return true;
-    }
-}
+//
+//class Solution {
+//    public boolean lemonadeChange(int[] bills) {
+//        int moneyFive = 0;
+//        int moneyTen = 0;
+//        for(int i = 0; i < bills.length; i++) {
+//            if(bills[i] == 5) moneyFive ++;
+//            if(bills[i] == 10) {
+//                moneyFive--;
+//                moneyTen++;
+//            }
+//            if(bills[i] == 20) {
+//                if(moneyTen > 0) {//如果有十元钱，优先用十元钱
+//                    moneyTen--;
+//                }else {
+//                    moneyFive -= 2;
+//                }
+//                moneyFive--;
+//            }
+//
+//            if(moneyTen < 0 || moneyFive < 0) return false;
+//        }
+//        return true;
+//    }
+//}
 
 
 /**
