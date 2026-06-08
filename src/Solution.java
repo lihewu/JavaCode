@@ -7,6 +7,121 @@ import java.util.*;
  */
 
 
+
+class Solution {
+    int count = 0;
+    public int minCameraCover(TreeNode root) {
+        if(root == null) return 0;
+        //如果根节点在呼救，说明根节点需要一个摄像头
+        if(postOrder(root) == 0) return count+1;
+        return count;
+    }
+
+    /**
+     * 状态值：
+     * 0.表示未被覆盖,请求父节点覆盖（贪心：叶子节点装摄像头的话浪费）
+     * 1.表示有摄像头，可以覆盖孩子节点/父节点
+     * 2.表示被覆盖，但是无摄像头
+     * @param root
+     * @return
+     */
+    //后续遍历,从底部开始判断
+    private int postOrder(TreeNode root) {//每个节点，都根据其孩子的返回值判断是否需要装监控
+        //空节点一定是被覆盖的状态，因为我们不可能因为空节点取给叶子节点装摄像头
+        if(root == null) return 2;
+
+        //只有记录左右子树，才能表示遍历整棵树，不然只是单边遍历
+        int left = postOrder(root.left);
+        int right = postOrder(root.right);
+
+        //如果有任一个孩子呼叫，当前节点必须装摄像头
+        if(left == 0 || right == 0) {
+            count++;
+            return 1;
+        }
+        //如果有孩子都被覆盖，当前节点很危险，开始呼救
+        if(left == 2 && right == 2) return 0;
+        //剩余情况只有孩子有摄像头了,一人吃饱，全家不饿
+        else return 2;
+
+    }
+}
+
+
+
+
+
+
+/**
+ * 738.单调递增的数字
+ * 当且仅当每个相邻位数上的数字 x 和 y 满足 x <= y 时，我们称这个整数是单调递增的。
+ * 给定一个整数 n ，返回 小于或等于 n 的最大数字，且数字呈 单调递增 。
+ * 输入: n = 1234
+ * 输出: 1234
+ */
+
+//class Solution {
+//    public int monotoneIncreasingDigits(int n) {
+//        //比传统的while处理更方便
+//        String str = String.valueOf(n);
+//        char[] ch = str.toCharArray();
+//
+//        int pos = ch.length;
+//        for(int i = ch.length-2; i >= 0; i--) {
+//            if(ch[i] > ch[i+1]) {
+//                ch[i]--;
+//                pos = i+1;
+//            }
+//        }
+//
+//        for(int i = pos; i < ch.length; i++) {
+//            ch[i] = '9';
+//        }
+//
+//        return Integer.parseInt(String.valueOf(ch));
+//    }
+//}
+
+/**
+ * 56.合并区间
+ * 以数组 intervals 表示若干个区间的集合，其中单个区间为 intervals[i] = [starti, endi]
+ * 请你合并所有重叠的区间，并返回 一个不重叠的区间数组，该数组需恰好覆盖输入中的所有区间
+ */
+//
+//class Solution {
+//    public int[][] merge(int[][] intervals) {
+//        if(intervals == null || intervals.length == 0) return new int[0][];
+//
+//        List<int[]> resList = new ArrayList<>();
+//
+//        //根据起始区域进行排序
+//        Arrays.sort(intervals,Comparator.comparingInt(a -> a[0]));
+//        //记录起始位置
+//        int start = intervals[0][0];
+//        int end = intervals[0][1];
+//        for(int i = 1; i < intervals.length; i++) {
+//            //如果当前元素起始位置 > 上一元素起始位置
+//            if(intervals[i][0] > end) {
+//                int[] temp = {start,end};
+//                resList.add(temp);
+//                start = intervals[i][0];
+//                end = intervals[i][1];
+//            } else { //如果区域发生重叠，则右边界取最大值
+//                end = Math.max(intervals[i][1],end);
+//            }
+//        }
+//        //处理最后一个
+//        resList.add(new int[]{start,end});
+//        int[][] ret = new int[resList.size()][];
+//        for(int i = 0; i < resList.size(); i++) {
+//            ret[i] = resList.get(i);
+//        }
+//        return ret;
+//    }
+//}
+
+
+
 /**
  * 763.划分字母区间
  * 给你一个字符串 s 。我们要把这个字符串划分为尽可能多的片段，同一字母最多出现在一个片段中。
@@ -15,34 +130,34 @@ import java.util.*;
  * 返回一个表示每个字符串片段的长度的列表。
  */
 
-
-class Solution {
-    public List<Integer> partitionLabels(String s) {
-        if(s == null) return new ArrayList<>();
-
-        List<Integer> resList = new ArrayList<>();
-        //记录每个字母最后一次出现在char[]的下标
-        int[] lastIndex = new int[26];
-        char[] str = s.toCharArray();
-
-        for(int i = 0; i < str.length; i++) {
-            lastIndex[str[i] - 'a'] = i;
-        }
-        //记录当前已经遍历元素的最大下标
-        int maxIndex = 0;
-        //记录先前内容的最后Index
-        int preLast = -1;
-        for(int i = 0; i < str.length; i++) {
-            //当前已经包含的元素最远位置
-            maxIndex = Math.max(maxIndex,lastIndex[str[i] - 'a']);
-            if(i == maxIndex) {
-                resList.add(i - preLast);
-                preLast = i;
-            }
-        }
-        return resList;
-    }
-}
+//
+//class Solution {
+//    public List<Integer> partitionLabels(String s) {
+//        if(s == null) return new ArrayList<>();
+//
+//        List<Integer> resList = new ArrayList<>();
+//        //记录每个字母最后一次出现在char[]的下标
+//        int[] lastIndex = new int[26];
+//        char[] str = s.toCharArray();
+//
+//        for(int i = 0; i < str.length; i++) {
+//            lastIndex[str[i] - 'a'] = i;
+//        }
+//        //记录当前已经遍历元素的最大下标
+//        int maxIndex = 0;
+//        //记录先前内容的最后Index
+//        int preLast = -1;
+//        for(int i = 0; i < str.length; i++) {
+//            //当前已经包含的元素最远位置
+//            maxIndex = Math.max(maxIndex,lastIndex[str[i] - 'a']);
+//            if(i == maxIndex) {
+//                resList.add(i - preLast);
+//                preLast = i;
+//            }
+//        }
+//        return resList;
+//    }
+//}
 
 
 
