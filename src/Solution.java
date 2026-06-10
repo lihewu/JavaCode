@@ -1,6 +1,87 @@
 import java.util.*;
 //import java.util.Stack;//最垃圾的类，没有之一
 
+/**
+ * oh yeah开启我的DP时间
+ */
+
+
+/**
+ * 746.最小花费爬楼梯
+ */
+
+class Solution {
+    public int minCostClimbingStairs(int[] cost) {
+        int[] dp = new int[cost.length];//dp[i],表示走到第i格所需要的最小体力
+        dp[0] = 0; dp[1] = 0;
+        for(int i = 2; i < dp.length; i++) {
+            dp[i] = Math.min(dp[i-1] + cost[i-1],dp[i-2] + cost[i-2]);
+        }
+        return Math.min(dp[dp.length-1] + cost[dp.length-1] , dp[dp.length-2] + cost[dp.length-2]);
+    }
+}
+
+
+/**
+ * 70.跳楼梯
+ */
+
+//class Solution {
+//    public int climbStairs(int n) {
+//        if(n <= 2) return n;
+//        int a = 1; int b = 2; int c = 0;
+//        for(int i = 3; i <= n; i++) {
+//            c = a + b;
+//            a = b;
+//            b = c;
+//        }
+//        return c;
+//    }
+//}
+
+
+
+/**
+ * 509.斐波那契数列
+ */
+
+//class Solution {
+//    public int fib(int n) {
+//        if (n < 2) return n;
+//        int a = 0, b = 1, c = 0;
+//        for (int i = 1; i < n; i++) {
+//            c = a + b;
+//            a = b;
+//            b = c;
+//        }
+//        return c;
+//    }
+//}
+
+//非压缩写法
+//class Solution {
+//    int[] dp;
+//    public int fib(int n) {
+//        if(n < 2) {
+//            return n;
+//        }
+//        dp = new int[n+1];
+//        dp[0] = 0;
+//        dp[1] = 1;
+//        for(int i = 2; i < n + 1; i++) {
+//            dp[i] = dp[i - 1] + dp[i - 2];
+//            System.out.println("dpi is " + dp[i]);
+//        }
+//        return dp[n];
+//    }
+//}
+
+
+
+
+
+
+
 
 /**
  * 正式进入-贪心算法greedyProblem
@@ -8,44 +89,44 @@ import java.util.*;
 
 
 
-class Solution {
-    int count = 0;
-    public int minCameraCover(TreeNode root) {
-        if(root == null) return 0;
-        //如果根节点在呼救，说明根节点需要一个摄像头
-        if(postOrder(root) == 0) return count+1;
-        return count;
-    }
-
-    /**
-     * 状态值：
-     * 0.表示未被覆盖,请求父节点覆盖（贪心：叶子节点装摄像头的话浪费）
-     * 1.表示有摄像头，可以覆盖孩子节点/父节点
-     * 2.表示被覆盖，但是无摄像头
-     * @param root
-     * @return
-     */
-    //后续遍历,从底部开始判断
-    private int postOrder(TreeNode root) {//每个节点，都根据其孩子的返回值判断是否需要装监控
-        //空节点一定是被覆盖的状态，因为我们不可能因为空节点取给叶子节点装摄像头
-        if(root == null) return 2;
-
-        //只有记录左右子树，才能表示遍历整棵树，不然只是单边遍历
-        int left = postOrder(root.left);
-        int right = postOrder(root.right);
-
-        //如果有任一个孩子呼叫，当前节点必须装摄像头
-        if(left == 0 || right == 0) {
-            count++;
-            return 1;
-        }
-        //如果有孩子都被覆盖，当前节点很危险，开始呼救
-        if(left == 2 && right == 2) return 0;
-        //剩余情况只有孩子有摄像头了,一人吃饱，全家不饿
-        else return 2;
-
-    }
-}
+//class Solution {
+//    int count = 0;
+//    public int minCameraCover(TreeNode root) {
+//        if(root == null) return 0;
+//        //如果根节点在呼救，说明根节点需要一个摄像头
+//        if(postOrder(root) == 0) return count+1;
+//        return count;
+//    }
+//
+//    /**
+//     * 状态值：
+//     * 0.表示未被覆盖,请求父节点覆盖（贪心：叶子节点装摄像头的话浪费）
+//     * 1.表示有摄像头，可以覆盖孩子节点/父节点
+//     * 2.表示被覆盖，但是无摄像头
+//     * @param root
+//     * @return 当前节点状态值 int
+//     */
+//    //后续遍历,从底部开始判断
+//    private int postOrder(TreeNode root) {//每个节点，都根据其孩子的返回值判断是否需要装监控
+//        //空节点一定是被覆盖的状态，因为我们不可能因为空节点取给叶子节点装摄像头
+//        if(root == null) return 2;
+//
+//        //只有记录左右子树，才能表示遍历整棵树，不然只是单边遍历
+//        int left = postOrder(root.left);
+//        int right = postOrder(root.right);
+//
+//        //如果有任一个孩子呼叫，当前节点必须装摄像头
+//        if(left == 0 || right == 0) {
+//            count++;
+//            return 1;
+//        }
+//        //如果有孩子都被覆盖，当前节点很危险，开始呼救
+//        if(left == 2 && right == 2) return 0;
+//        //剩余情况只有孩子有摄像头了,一人吃饱，全家不饿
+//        else return 2;
+//
+//    }
+//}
 
 
 
