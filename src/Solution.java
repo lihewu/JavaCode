@@ -7,19 +7,103 @@ import java.util.*;
 
 
 /**
- * 746.最小花费爬楼梯
+ * 96，n个节点的二叉搜索树有多少种可能
  */
 
 class Solution {
-    public int minCostClimbingStairs(int[] cost) {
-        int[] dp = new int[cost.length];//dp[i],表示走到第i格所需要的最小体力
-        dp[0] = 0; dp[1] = 0;
-        for(int i = 2; i < dp.length; i++) {
-            dp[i] = Math.min(dp[i-1] + cost[i-1],dp[i-2] + cost[i-2]);
+    public int numTrees(int n) {
+        int[] dp = new int[n + 1];
+        //空树也表示一颗BST
+        dp[0] = 1; dp[1] = 1;
+        //记录总数为i的节点一共可能的二叉搜索树个数
+        for(int i = 2; i <= n; i++) {
+            for(int j = 0; j < i; j++) {
+                //节点总数为i的，不同长度的左右子树情况之和
+                dp[i] += dp[j] * dp[i-1-j];
+            }
         }
-        return Math.min(dp[dp.length-1] + cost[dp.length-1] , dp[dp.length-2] + cost[dp.length-2]);
+        return dp[n];
     }
 }
+
+
+/**
+ * 63.不同路径Ⅱ
+ */
+
+//class Solution {
+//    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+//        //防空
+//        if(obstacleGrid == null || obstacleGrid.length == 0) return 0;
+//        //如果起点/中点有障碍，无法通行
+//        if(obstacleGrid[0][0] == 1 || obstacleGrid[obstacleGrid.length-1][obstacleGrid[0].length-1] == 1) return 0;
+//        int[][] dp = new int[obstacleGrid.length][obstacleGrid[0].length];
+//
+//        for(int i = 0; i < obstacleGrid.length; i++) {
+//            if(obstacleGrid[i][0] == 1) break;  //当其中一块被石头挡住之后，后续所有路都为0
+//            dp[i][0] = 1;
+//        }
+//        for(int i = 0; i < obstacleGrid[0].length; i++) {
+//            if(obstacleGrid[0][i] == 1) break;
+//            dp[0][i] = 1;
+//        }
+//
+//        for(int i = 1; i < obstacleGrid.length; i++) {
+//            for(int j = 1; j < obstacleGrid[0].length; j++) {
+//                if(obstacleGrid[i][j] == 0) {
+//                    dp[i][j] = dp[i-1][j] + dp[i][j-1];
+//                } else {
+//                    dp[i][j] = 0;
+//                }
+//            }
+//        }
+//        return dp[dp.length - 1][dp[0].length - 1];
+//    }
+//}
+
+
+
+/**
+ * 62.不同路径
+ */
+
+//class Solution {
+//    public int uniquePaths(int m, int n) {
+//        if(m == 0) return n;
+//        if(n == 0) return m;
+//
+//        int[][] dp = new int[m][n];
+//        for(int i = 0; i < m; i++) {
+//            dp[i][0] = 1;
+//        }
+//        for(int i = 0; i < n; i++) {
+//            dp[0][i] = 1;
+//        }
+//
+//        for(int i = 1; i < m; i++) {
+//            for(int j = 1; j < n; j++) {
+//                dp[i][j] = dp[i-1][j] + dp[i][j-1];
+//            }
+//        }
+//        return dp[m-1][n-1];
+//    }
+//}
+
+
+/**
+ * 746.最小花费爬楼梯
+ */
+//
+//class Solution {
+//    public int minCostClimbingStairs(int[] cost) {
+//        int[] dp = new int[cost.length];//dp[i],表示走到第i格所需要的最小体力
+//        dp[0] = 0; dp[1] = 0;
+//        for(int i = 2; i < dp.length; i++) {
+//            dp[i] = Math.min(dp[i-1] + cost[i-1],dp[i-2] + cost[i-2]);
+//        }
+//        return Math.min(dp[dp.length-1] + cost[dp.length-1] , dp[dp.length-2] + cost[dp.length-2]);
+//    }
+//}
 
 
 /**
