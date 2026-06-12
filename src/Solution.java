@@ -7,24 +7,140 @@ import java.util.*;
 
 
 /**
- * 96，n个节点的二叉搜索树有多少种可能
+ * 416.分割等和子集
+ * 给你一个 只包含正整数 的 非空 数组 nums 。请你判断是否可以将这个数组分割成两个子集，使得两个子集的元素和相等
  */
 
+
+//一维数组
 class Solution {
-    public int numTrees(int n) {
-        int[] dp = new int[n + 1];
-        //空树也表示一颗BST
-        dp[0] = 1; dp[1] = 1;
-        //记录总数为i的节点一共可能的二叉搜索树个数
-        for(int i = 2; i <= n; i++) {
-            for(int j = 0; j < i; j++) {
-                //节点总数为i的，不同长度的左右子树情况之和
-                dp[i] += dp[j] * dp[i-1-j];
+    public boolean canPartition(int[] nums) {
+        if(nums == null || nums.length == 0) return false;
+        int sum = 0;
+        for(int i : nums) sum += i;//获取数组和
+        if(sum % 2 != 0) return false;//如何数组和为奇数，不可能恰分为两个int子集
+
+        int bagWeight = sum/2;
+        boolean[] dp = new boolean[bagWeight + 1]; //dp[j] 表示背包含量为j的最大价值
+        //初始化
+        dp[0] = true;
+        for(int i = 1; i < dp.length; i++) {
+            dp[i] = false;
+        }
+
+        for(int i = 0; i < nums.length; i++) {//遍历物品
+            for(int j = bagWeight; j >= nums[i]; j--) {
+                dp[j] = dp[j] || dp[j - nums[i]];
             }
         }
-        return dp[n];
+        return dp[dp.length-1];
     }
 }
+
+
+
+
+//class Solution {
+//    public boolean canPartition(int[] nums) {
+//        //直接转化为01背包问题，划分为两个等和，说明最大背包为sum/2
+//        int sum = 0;
+//        for(int i : nums) sum += i;
+//        //如果sum为奇数，说明不可能通过整数数组划分为两个等和子集
+//        if(sum % 2 != 0) return false;
+//
+//        int bagWeight = sum /2;
+//        //dp[i][j]，0~i号物品任选，放到bagWeight = j的背包中最大价值
+//        boolean[][] dp = new boolean[nums.length][bagWeight + 1];//一共有nums.length个数可供选择，只要恰好满足bagWeight值即可
+//        for (boolean[] booleans : dp) {
+//            Arrays.fill(booleans, false);
+//        }
+//
+//        //初始化第一行第一列(只有dp[0][0]无法根据上行来确定值);tips:本题要求恰好满足，并且类型是boolean类型，所以只有符合值才能为true
+//        if(nums[0] <= bagWeight) dp[0][nums[0]] = true;
+//
+//        for(int i = 1; i < nums.length; i++) {//外层i遍历物品
+//            for(int j = 1; j < bagWeight + 1; j++) {//内层遍历bagWeight
+//                dp[i][j] = dp[i-1][j];//如果0~i-1的数 能满足和 == j，0~i的数也一定满足
+//                //如果nums[i]恰好满足背包j，则为true
+//                if(nums[i] == j) {
+//                    dp[i][j] = true;
+//                    continue;
+//                }
+//                //如果不能恰好满足,就看0~i能否满足 j-nums[i]的和  或者 0~i-1能否满足j的和
+//                if(nums[i] < j) {//tips:必须当前能放下这个数
+//                    dp[i][j] = dp[i-1][j - nums[i]] || dp[i-1][j]; //放下当前数和不放当前数有一个可能即为成
+//                }
+//            }
+//        }
+//        return dp[dp.length - 1][dp[0].length-1];
+//    }
+//}
+
+/**
+ * 01背包问题
+ */
+
+//
+//class Solution {
+//    public void func(String[] args) {
+//        Scanner scanner = new Scanner(System.in);
+//        int n = scanner.nextInt();//物品个数
+//        int bagweight = scanner.nextInt();//背包负重
+//
+//        int[] weight = new int[n];
+//        int[] value = new int[n];
+//
+//        for (int i = 0; i < n; ++i) {
+//            weight[i] = scanner.nextInt();
+//        }
+//        for (int j = 0; j < n; ++j) {
+//            value[j] = scanner.nextInt();
+//        }
+//
+//        //为什么行数是n? 因为默认dp[0][j]用来放第一个物品
+//        //为什么列数是bageweight + 1? 因为默认dp[i][0]为背包重量为0的情况
+//        int[][] dp = new int[n][bagweight + 1];//物品数/背包负重+1;
+//
+//        //第一列dp[i][0]默认为0，因为表示背包内物品数 = 0;
+//        //背包第一行初始化为包内物品的默认价值
+//        for (int j = weight[0]; j <= bagweight; j++) {
+//            dp[0][j] = value[0];//dp的含义:记录当前背包的价值
+//        }
+//
+//        for (int i = 1; i < n; i++) {
+//            for (int j = 0; j <= bagweight; j++) {
+//                if (j < weight[i]) {//如果背包没放满 tips:本体bagweight = 1;
+//                    dp[i][j] = dp[i - 1][j];
+//                } else {//如果放满了，取原本背包和置换背包的最大值
+//                    dp[i][j] = Math.max(dp[i - 1][j], dp[i - 1][j - weight[i]] + value[i]);
+//                }
+//            }
+//        }
+//
+//        System.out.println(dp[n - 1][bagweight]);
+//    }
+//}
+
+
+/**
+ * 96，n个节点的二叉搜索树有多少种可能
+ */
+//
+//class Solution {
+//    public int numTrees(int n) {
+//        int[] dp = new int[n + 1];
+//        //空树也表示一颗BST
+//        dp[0] = 1; dp[1] = 1;
+//        //记录总数为i的节点一共可能的二叉搜索树个数
+//        for(int i = 2; i <= n; i++) {
+//            for(int j = 0; j < i; j++) {
+//                //节点总数为i的，不同长度的左右子树情况之和
+//                dp[i] += dp[j] * dp[i-1-j];
+//            }
+//        }
+//        return dp[n];
+//    }
+//}
 
 
 /**
