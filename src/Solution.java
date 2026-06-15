@@ -7,35 +7,133 @@ import java.util.*;
 
 
 /**
+ * 474.一和零
+ * strs 中包含很多个 gay佬派对，我们需要从中挑几个派对
+ * 使得 1 的总数量不超过 n 个，0 不超过 m 个，求最多能邀请几个派对来参加
+ */
+
+class Solution {
+    public int findMaxForm(String[] strs, int m, int n) {
+        if(strs == null || strs.length == 0) return 0;
+        //因为本题的背包对1 和 0分别有要求，所以采用二维数组
+        int[][] dp = new int[m+1][n+1];//左0右1
+
+        int zeroCount ;int oneCount;
+
+        //遍历整个strs数组
+        for(String s : strs) {
+            //初始化记录每个字符串的0和1个数
+            zeroCount = 0; oneCount = 0;
+            //遍历字符串
+            for(char ch : s.toCharArray()) {
+                if(ch == '0') zeroCount++;
+                else oneCount++;
+            }
+            //因为是求最大个数，不是求恰好满足，倒序
+            for(int i = m; i >= zeroCount; i--) {
+                for(int j = n; j >= oneCount; j--) {
+                    //不保留当前字符串，还是保留当前字符串（dp[][]+1）
+                    dp[i][j] = Math.max(dp[i][j],dp[i - zeroCount][j - oneCount] + 1);
+                }
+            }
+        }
+        return dp[m][n];
+    }
+}
+
+
+/**
+ *494.目标和
+ * 给你一个非负整数数组 nums 和一个整数 target 。
+ * 向数组中的每个整数前添加 '+' 或 '-' ，然后串联起所有整数，可以构造一个 表达式 ：
+ * 例如，nums = [2, 1] ，可以在 2 之前添加 '+' ，在 1 之前添加 '-' ，然后串联起来得到表达式 "+2-1" 。
+ * 返回可以通过上述方法构造的、运算结果等于 target 的不同 表达式 的数目。
+ */
+
+
+//class Solution {
+//    public int findTargetSumWays(int[] nums, int target) {
+//        if(nums == null || nums.length == 0) return 0;
+//        int sum = 0;
+//        for(int i : nums) sum += i;
+//        if(Math.abs(target) > sum) return 0; //如果target比总和都大，肯定不存在;
+//        if( (target + sum) % 2 != 0) return 0; //如果sum+target不被整除，不存在
+//
+//        int bagTarget = (sum + target) / 2;
+//        int[] dp = new int[bagTarget+1];//dp[j]表示目标和为j的情况有多少种
+//        dp[0] = 1;//凑出bagTarget = 0 也有一种可能
+//        for(int i = 0; i < nums.length; i++) {//外层物品数
+//            for(int j = bagTarget; j >= nums[i];j--) {//内层总数和
+//                dp[j] += dp[j - nums[i]];
+//            }
+//        }
+//        return dp[bagTarget];
+//    }
+//}
+
+
+
+/**
+ * 1049.最小石头重量Ⅱ
+ * 有一堆石头，用整数数组 stones 表示。其中 stones[i] 表示第 i 块石头的重量。
+ * 每一回合，从中选出任意两块石头，然后将它们一起粉碎。假设石头的重量分别为 x 和 y，且 x <= y。那么粉碎的可能结果如下：
+ * 如果 x == y，那么两块石头都会被完全粉碎；
+ * 如果 x != y，那么重量为 x 的石头将会完全粉碎，而重量为 y 的石头新重量为 y-x。
+ * 最后，最多只会剩下一块 石头。返回此石头 最小的可能重量 。如果没有石头剩下，就返回 0。
+ */
+
+
+//class Solution {
+//    public int lastStoneWeightII(int[] stones) {
+//        if(stones == null || stones.length == 0) return 0;
+//        int sum = 0;
+//        for(int i : stones) sum += i;
+//        int target = sum/2; //最优情况下，石头尽量划分为两组
+//        int[] dp = new int[target + 1];//最大石头重量
+//        dp[0] = 0;
+//
+//        //外层:遍历石头数
+//        for(int i = 0; i < stones.length; i++) {
+//            for(int j = target; j >= stones[i]; j--) {
+//                dp[j] = Math.max(dp[j],dp[j - stones[i]] + stones[i]);//不放石头 i 和放石头 i 的最大情况
+//            }
+//        }
+//
+//        return sum - dp[target] * 2;
+//    }
+//}
+
+
+/**
  * 416.分割等和子集
  * 给你一个 只包含正整数 的 非空 数组 nums 。请你判断是否可以将这个数组分割成两个子集，使得两个子集的元素和相等
  */
 
-
-//一维数组
-class Solution {
-    public boolean canPartition(int[] nums) {
-        if(nums == null || nums.length == 0) return false;
-        int sum = 0;
-        for(int i : nums) sum += i;//获取数组和
-        if(sum % 2 != 0) return false;//如何数组和为奇数，不可能恰分为两个int子集
-
-        int bagWeight = sum/2;
-        boolean[] dp = new boolean[bagWeight + 1]; //dp[j] 表示背包含量为j的最大价值
-        //初始化
-        dp[0] = true;
-        for(int i = 1; i < dp.length; i++) {
-            dp[i] = false;
-        }
-
-        for(int i = 0; i < nums.length; i++) {//遍历物品
-            for(int j = bagWeight; j >= nums[i]; j--) {
-                dp[j] = dp[j] || dp[j - nums[i]];
-            }
-        }
-        return dp[dp.length-1];
-    }
-}
+//
+////一维数组
+//class Solution {
+//    public boolean canPartition(int[] nums) {
+//        if(nums == null || nums.length == 0) return false;
+//        int sum = 0;
+//        for(int i : nums) sum += i;//获取数组和
+//        if(sum % 2 != 0) return false;//如何数组和为奇数，不可能恰分为两个int子集
+//
+//        int bagWeight = sum/2;
+//        boolean[] dp = new boolean[bagWeight + 1]; //dp[j] 表示背包含量为j的最大价值
+//        //初始化
+//        dp[0] = true;
+//        for(int i = 1; i < dp.length; i++) {
+//            dp[i] = false;
+//        }
+//
+//        for(int i = 0; i < nums.length; i++) {//遍历物品
+//            for(int j = bagWeight; j >= nums[i]; j--) {
+//                dp[j] = dp[j] || dp[j - nums[i]];
+//            }
+//        }
+//        return dp[dp.length-1];
+//    }
+//}
 
 
 
