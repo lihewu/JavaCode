@@ -6,40 +6,95 @@ import java.util.*;
  */
 
 
+/**377.组合总和
+ *给你一个由 不同 整数组成的数组 nums ，和一个目标整数 target 。请你从 nums 中找出并返回总和为 target 的元素组合的个数。
+ * tips:组合序列顺序不同被视为不同组合
+ */
+
+
+class Solution {
+    public int combinationSum4(int[] nums, int target) {
+        if(nums == null || nums.length == 0) return 0;
+        int[] dp = new int[target + 1];
+        dp[0] = 1;
+        //对于排列问题（不同于组合数，外层是遍历背包大小）
+        for(int j = 0; j <= target; j ++) {
+            //内层遍历
+            for(int i = 0; i < nums.length; i++) {
+                if(j >= nums[i]) {//如果当前背包比当前元素大
+                    dp[j] += dp[j-nums[i]];
+                }
+            }
+        }
+        return dp[target];
+    }
+}
+
+
+
+
+
+/**
+ * 518.零钱兑换
+ * 给你一个整数数组 coins 表示不同面额的硬币，另给一个整数 amount 表示总金额。
+ * 请你计算并返回可以凑成总金额的硬币组合数。如果任何硬币组合都无法凑出总金额，返回 0 。
+ * 假设每一种面额的硬币有无限个。
+ * 题目数据 保证 最终 结果符合 32 位 带符号整数
+ */
+
+//
+//class Solution {
+//    public int change(int amount, int[] coins) {
+//        if(coins == null || coins.length == 0) return 0;
+//
+//        int[] dp = new int[amount + 1];//dp[j]表示凑出总金额为j的可能性个数
+//        dp[0] = 1;//表示凑出金额为0组合数为1
+//
+//        for(int i = 0; i < coins.length; i++) {
+//            for(int j = coins[i]; j <= amount; j++) {
+//                dp[j] += dp[j-coins[i]];//这里不需要再加1.因为起始dp[0]为1，后续一定 > 1
+//            }
+//        }
+//        return Math.max(dp[amount], 0);
+//    }
+//}
+
+
+
 /**
  * 474.一和零
  * strs 中包含很多个 gay佬派对，我们需要从中挑几个派对
  * 使得 1 的总数量不超过 n 个，0 不超过 m 个，求最多能邀请几个派对来参加
  */
 
-class Solution {
-    public int findMaxForm(String[] strs, int m, int n) {
-        if(strs == null || strs.length == 0) return 0;
-        //因为本题的背包对1 和 0分别有要求，所以采用二维数组
-        int[][] dp = new int[m+1][n+1];//左0右1
-
-        int zeroCount ;int oneCount;
-
-        //遍历整个strs数组
-        for(String s : strs) {
-            //初始化记录每个字符串的0和1个数
-            zeroCount = 0; oneCount = 0;
-            //遍历字符串
-            for(char ch : s.toCharArray()) {
-                if(ch == '0') zeroCount++;
-                else oneCount++;
-            }
-            //因为是求最大个数，不是求恰好满足，倒序
-            for(int i = m; i >= zeroCount; i--) {
-                for(int j = n; j >= oneCount; j--) {
-                    //不保留当前字符串，还是保留当前字符串（dp[][]+1）
-                    dp[i][j] = Math.max(dp[i][j],dp[i - zeroCount][j - oneCount] + 1);
-                }
-            }
-        }
-        return dp[m][n];
-    }
-}
+//class Solution {
+//    public int findMaxForm(String[] strs, int m, int n) {
+//        if(strs == null || strs.length == 0) return 0;
+//        //因为本题的背包对1 和 0分别有要求，所以采用二维数组
+//        int[][] dp = new int[m+1][n+1];//左0右1
+//
+//        int zeroCount ;int oneCount;
+//
+//        //遍历整个strs数组
+//        for(String s : strs) {
+//            //初始化记录每个字符串的0和1个数
+//            zeroCount = 0; oneCount = 0;
+//            //遍历字符串
+//            for(char ch : s.toCharArray()) {
+//                if(ch == '0') zeroCount++;
+//                else oneCount++;
+//            }
+//            //因为是求最大个数，不是求恰好满足，倒序
+//            for(int i = m; i >= zeroCount; i--) {
+//                for(int j = n; j >= oneCount; j--) {
+//                    //不保留当前字符串，还是保留当前字符串（dp[][]+1）
+//                    dp[i][j] = Math.max(dp[i][j],dp[i - zeroCount][j - oneCount] + 1);
+//                }
+//            }
+//        }
+//        return dp[m][n];
+//    }
+//}
 
 
 /**
