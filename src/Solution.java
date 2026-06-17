@@ -5,6 +5,84 @@ import java.util.*;
  * oh yeah开启我的DP时间
  */
 
+/**
+ * 139.单词拆分
+ * 给你一个字符串 s 和一个字符串列表 wordDict 作为字典。如果可以利用字典中出现的一个或多个单词拼接出 s 则返回 true。
+ * 注意：不要求字典中出现的单词全部都使用，并且字典中的单词可以重复使用。
+ */
+
+
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        boolean[] dp = new boolean[s.length()+1];//本题的s.length为bagWeight
+        Set<String> set = new HashSet<>(wordDict);
+        dp[0] = true;
+        //完全背包问题，并且对顺序有要求(要求可以拼接处原本的s);所以是排列问题
+        for(int j = 1; j <= s.length(); j++) {//结束位置,外层背包容量
+            for(int i = 0; i < j; i++) {//内层物品，起始位置
+                //只有前面单词已经找到，后面的单词找到才有意义
+                if(dp[i] && set.contains(s.substring(i,j))) {//[i~j)的元素
+                    dp[j] = true;
+                    break;//当前单词已经找到，再用j当结尾无意义，开始下一轮循环
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+}
+
+
+/**
+ * 279.完全平方数
+ * 给你一个整数 n ，返回 和为 n 的完全平方数的最少数量
+ * 完全平方数 是一个整数，其值等于另一个整数的平方；换句话说，其值等于一个整数自乘的积。例如，1、4、9 和 16 都是完全平方数，而 3 和 11 不是
+ * 输入：n = 13
+ * 输出：2
+ * 解释：13 = 4 + 9
+ */
+
+//class Solution {
+//    public int numSquares(int n) {
+//        int sqrt = (int)Math.sqrt(n);
+//        int[] dp = new int[n+1];
+//        Arrays.fill(dp,Integer.MAX_VALUE);
+//        dp[0] = 0;
+//        for(int i = 0; i <= sqrt; i++) {
+//            for(int j = i*i; j <= n; j++) {
+//                if(dp[j-i] != Integer.MAX_VALUE) {
+//                    dp[j] = Math.min(dp[j],dp[j-i*i] + 1);
+//                }
+//            }
+//        }
+//        return dp[n];
+//    }
+//}
+
+
+/**
+ * 322.零钱兑换
+ * 给你一个整数数组 coins ，表示不同面额的硬币；以及一个整数 amount ，表示总金额。
+ * 计算并返回可以凑成总金额所需的最少的硬币个数 。如果没有任何一种硬币组合能组成总金额，返回 -1 。
+ * 你可以认为每种硬币的数量是无限的
+ */
+
+//class Solution {
+//    public int coinChange(int[] coins, int amount) {
+//        if(coins == null || coins.length == 0) return -1;
+//        int[] dp = new int[amount + 1];
+//        Arrays.fill(dp,Integer.MAX_VALUE);
+//        dp[0] = 0;//千万不能实例化成dp[0] = 1,因为不存在0元硬币
+//        for(int i = 0; i < coins.length; i++) {
+//            for(int j = coins[i]; j <= amount; j++) {
+//                if(dp[j-coins[i]] != Integer.MAX_VALUE) {
+//                    dp[j] = Math.min(dp[j],dp[j-coins[i]] + 1);
+//                }
+//            }
+//        }
+//        return dp[amount] == Integer.MAX_VALUE? -1 : dp[amount];
+//    }
+//}
+
 
 /**377.组合总和
  *给你一个由 不同 整数组成的数组 nums ，和一个目标整数 target 。请你从 nums 中找出并返回总和为 target 的元素组合的个数。
@@ -12,30 +90,30 @@ import java.util.*;
  */
 
 
-class Solution {
-    public int combinationSum4(int[] nums, int target) {
-        if(nums == null || nums.length == 0) return 0;
-        int[] dp = new int[target + 1];
-        dp[0] = 1;
-        //对于排列问题（不同于组合数，外层是遍历背包大小）
-        for(int j = 0; j <= target; j ++) {
-            //内层遍历
-            for(int i = 0; i < nums.length; i++) {
-                if(j >= nums[i]) {//如果当前背包比当前元素大
-                    dp[j] += dp[j-nums[i]];
-                }
-            }
-        }
-        return dp[target];
-    }
-}
+//class Solution {
+//    public int combinationSum4(int[] nums, int target) {
+//        if(nums == null || nums.length == 0) return 0;
+//        int[] dp = new int[target + 1];
+//        dp[0] = 1;
+//        //对于排列问题（不同于组合数，外层是遍历背包大小）
+//        for(int j = 0; j <= target; j ++) {
+//            //内层遍历
+//            for(int i = 0; i < nums.length; i++) {
+//                if(j >= nums[i]) {//如果当前背包比当前元素大
+//                    dp[j] += dp[j-nums[i]];
+//                }
+//            }
+//        }
+//        return dp[target];
+//    }
+//}
 
 
 
 
 
 /**
- * 518.零钱兑换
+ * 518.零钱兑换Ⅱ
  * 给你一个整数数组 coins 表示不同面额的硬币，另给一个整数 amount 表示总金额。
  * 请你计算并返回可以凑成总金额的硬币组合数。如果任何硬币组合都无法凑出总金额，返回 0 。
  * 假设每一种面额的硬币有无限个。
