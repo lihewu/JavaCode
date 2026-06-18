@@ -5,6 +5,177 @@ import java.util.*;
  * oh yeah开启我的DP时间
  */
 
+
+/**
+ * 337.打家劫舍Ⅲ
+ * 树形DP
+ */
+
+class Solution {
+    public int rob(TreeNode root) {
+        if(root == null) return 0;
+        int[] res = robAction(root);
+        return Math.max(res[0],res[1]);
+    }
+    //每个节点传递信息(抢的最大值/不抢的最大值)
+    private int[] robAction(TreeNode root) {
+        int[] res = new int[2];//由于只需要返回传/不传的信息，所以是int[2];
+        if(root == null) return res;
+        //保证遍历整个树
+        int[] left = robAction(root.left);
+        int[] right = robAction(root.right);
+
+        //不抢的情况，上一个节点可以抢，也可以不抢劫
+        int notRob = Math.max(left[0],left[1]) + Math.max(right[0],right[1]);
+        //抢的情况(如果我要抢了，左右子树肯定不能抢，不然违反原则了)
+        int rob =  root.val + left[0] + right[0];
+
+        return new int[]{notRob,rob};
+    }
+}
+
+
+
+/**
+ *213.打家劫舍Ⅱ
+ * 前后房子连成一个环
+ */
+
+
+//class Solution {
+//    public int rob(int[] nums) {
+//        if(nums == null || nums.length == 0) return 0;
+//        if(nums.length == 1) return nums[0];
+//        if(nums.length == 2) return Math.max(nums[0],nums[1]);
+//        return Math.max(robRange(nums,0,nums.length-1),robRange(nums,1,nums.length));
+//    }
+//    //[start,end)左开右闭
+//    private int robRange(int[] nums, int start,int end) {
+//        int pre1 = 0;//充当nums[i-1]，避免下标溢出
+//        int pre2 = 0;//充当nums[i-2]
+//        for(int i = start; i < end; i++) {
+//            int cur = Math.max(pre1,pre2 + nums[i]);
+//            pre2 = pre1;
+//            pre1 = cur;
+//        }
+//        return pre1;
+//    }
+//}
+
+
+/**
+ * 打家劫舍篇...堂堂登场
+ * 每间房内都藏有一定的现金，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。
+ * 给定一个代表每个房屋存放金额的非负整数数组，计算你 不触动警报装置的情况下 ，一夜之内能够偷窃到的最高金额。
+ */
+
+
+//class Solution {
+//    public int rob(int[] nums) {
+//        if(nums == null || nums.length == 0) return 0;
+//        if(nums.length <= 2) {
+//            if(nums.length == 2) return Math.max(nums[0],nums[1]);
+//            return nums[0];
+//        }
+//        int[] dp = new int[nums.length];
+//        Arrays.fill(dp,0);
+//        dp[0] = nums[0];
+//        dp[1] = Math.max(nums[0],nums[1]);
+//        for(int i = 2; i < nums.length; i++) {
+//            dp[i] = Math.max(dp[i-1],dp[i-2] + nums[i]);
+//        }
+//        return dp[nums.length-1];
+//    }
+//}
+
+
+
+/**
+ * 139.分隔回文字符串
+ */
+
+
+//class Solution {
+//    List<List<String>> resList = new ArrayList<>();
+//    List<String> path = new ArrayList<>();
+//    public List<List<String>> partition(String s) {
+//        if(s == null) return resList;
+//        backtracking(s,0);
+//        return resList;
+//    }
+//    private void backtracking(String s,int startPos) {
+//        //如果s已经遍历完了,这就是所有的回文子串
+//        if(startPos == s.length()) {
+//            resList.add(new ArrayList<>(path));
+//            return;
+//        }
+//        for(int i = startPos + 1; i <= s.length(); i++) {
+//            String str = s.substring(startPos,i);
+//            if( isEcho(str) ) {
+//                path.add(str);
+//                backtracking(s,i);
+//                path.removeLast();
+//            }
+//        }
+//    }
+//    private boolean isEcho(String str){
+//        if(str == null) return true;
+//        char[] ch = str.toCharArray();
+//        int left = 0; int right = ch.length - 1;
+//        while(left < right) {
+//            if(ch[left] != ch[right]) return false;
+//            left++;right--;
+//        }
+//        return true;
+//    }
+//}
+
+
+/**
+ * 背包问题结束了....
+ */
+
+
+//class Solution {
+//    List<List<String>> resList;
+//    List<String> cur;
+//    public List<List<String>> partition(String s) {
+//        if(s == null) return new ArrayList<>();
+//        resList = new ArrayList<>();
+//        cur = new ArrayList<>();
+//
+//        backtracking(s,0,new StringBuilder());
+//        return resList;
+//    }
+//
+//    private void backtracking(String s,int startPos,StringBuilder sb) {
+//        if(startPos == s.length()) {
+//            resList.add(new ArrayList<>(cur));
+//            return;
+//        }
+//        for(int i = startPos; i < s.length(); i++) {
+//            sb.append(s.charAt(i));
+//            if(checkEcho(sb)) {//如果拼接后的sb是 回文字符串
+//                cur.add(sb.toString());
+//                backtracking(s,i+1,new StringBuilder());
+//                cur.removeLast();
+//            }
+//        }
+//    }
+//
+//    private boolean checkEcho(StringBuilder s) {
+//        if(s == null) return true;
+//        for(int i = 0; i < s.length()/2; i++) {
+//            if(s.charAt(i) != s.charAt(s.length() - 1 - i)) return false;
+//        }
+//        return true;
+//    }
+//}
+
+
+
+
+
 /**
  * 139.单词拆分
  * 给你一个字符串 s 和一个字符串列表 wordDict 作为字典。如果可以利用字典中出现的一个或多个单词拼接出 s 则返回 true。
@@ -12,24 +183,24 @@ import java.util.*;
  */
 
 
-class Solution {
-    public boolean wordBreak(String s, List<String> wordDict) {
-        boolean[] dp = new boolean[s.length()+1];//本题的s.length为bagWeight
-        Set<String> set = new HashSet<>(wordDict);
-        dp[0] = true;
-        //完全背包问题，并且对顺序有要求(要求可以拼接处原本的s);所以是排列问题
-        for(int j = 1; j <= s.length(); j++) {//结束位置,外层背包容量
-            for(int i = 0; i < j; i++) {//内层物品，起始位置
-                //只有前面单词已经找到，后面的单词找到才有意义
-                if(dp[i] && set.contains(s.substring(i,j))) {//[i~j)的元素
-                    dp[j] = true;
-                    break;//当前单词已经找到，再用j当结尾无意义，开始下一轮循环
-                }
-            }
-        }
-        return dp[s.length()];
-    }
-}
+//class Solution {
+//    public boolean wordBreak(String s, List<String> wordDict) {
+//        boolean[] dp = new boolean[s.length()+1];//本题的s.length为bagWeight
+//        Set<String> set = new HashSet<>(wordDict);
+//        dp[0] = true;
+//        //完全背包问题，并且对顺序有要求(要求可以拼接处原本的s);所以是排列问题
+//        for(int j = 1; j <= s.length(); j++) {//结束位置,外层背包容量
+//            for(int i = 0; i < j; i++) {//内层物品，起始位置
+//                //只有前面单词已经找到，后面的单词找到才有意义
+//                if(dp[i] && set.contains(s.substring(i,j))) {//[i~j)的元素
+//                    dp[j] = true;
+//                    break;//当前单词已经找到，再用j当结尾无意义，开始下一轮循环
+//                }
+//            }
+//        }
+//        return dp[s.length()];
+//    }
+//}
 
 
 /**
