@@ -5,34 +5,124 @@ import java.util.*;
  * oh yeah开启我的DP时间
  */
 
+/**
+ * 股票问题
+ */
+
+
+/**
+ * 123.买股票的最佳时机Ⅲ
+ * 定一个数组，它的第 i 个元素是一支给定的股票在第 i 天的价格。
+ * 求获取的最大利润。你最多可以完成 两笔 交易。
+ * 注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）
+ */
+
+
+
+/**
+ *123.买股票的最佳时机Ⅱ
+ */
+
+class Solution {
+    public int maxProfit(int[] prices) {
+        if(prices == null || prices.length < 2) return 0;
+        int[] dp = new int[4];//一共只需要存储四种状态，直接在原数组上迭代
+        dp[0] = -prices[0]; dp[2] = -prices[0];
+        for(int i : prices) {
+            dp[0] = Math.max(dp[0],-i);
+            dp[1] = Math.max(dp[1],dp[0] + i);
+            dp[2] = Math.max(dp[2],dp[1] - i);
+            dp[3] = Math.max(dp[3],dp[2] + i);
+        }
+        return dp[3];
+    }
+}
+
+
+//
+//class Solution {
+//    public int maxProfit(int[] prices) {
+//        if(prices == null || prices.length < 2) return 0;
+//        //每支股票都有四种状态，0:buy1; 1:sell1; 2:buy2; 3:sell2;
+//        int[][] dp = new int[prices.length][4];
+//        dp[0][0] = -prices[0];
+//        dp[0][1] = 0;
+//        dp[0][2] = -prices[0];
+//        dp[0][3] = 0;
+//        for(int i = 1; i < prices.length; i++) {
+//            dp[i][0] = Math.max(dp[i-1][0],-prices[i]);//最低点买入，但是买入是负数，所以仍然是求最大值
+//            dp[i][1] = Math.max(dp[i-1][1],dp[i][0] + prices[i]);//求最大的第一次卖出点(上一层的sell1，还是当前的buy1 + 当前价值)
+//            dp[i][2] = Math.max(dp[i-1][2],dp[i][1] - prices[i]);//第二次最低点买入，是原本的buy1，还是sell1 - 当前值
+//            dp[i][3] = Math.max(dp[i-1][3],dp[i][2] + prices[i]);//同理，应该是Buy2+prices[i],这样就是两次的统一
+//        }
+//
+//        return dp[prices.length - 1][3];
+//    }
+//}
+
+
+/**
+ *122.买股票的最佳时机Ⅱ
+ */
+
+
+//class Solution {
+//    public int maxProfit(int[] prices) {
+//        if(prices == null || prices.length <2) return 0;
+//        int res = 0;
+//        for(int i = 1; i < prices.length; i++) {
+//            if(prices[i] - prices[i-1] > 0) res += prices[i] - prices[i-1];
+//        }
+//        return res;
+//    }
+//}
+
+/**
+ * 121.买股票的最佳时机
+ */
+
+//贪心策略
+//class Solution {
+//    public int maxProfit(int[] prices) {
+//        if(prices == null || prices.length <= 1) return 0;
+//        int low = Integer.MAX_VALUE;
+//        int res = 0;
+//        for(int i = 0; i < prices.length; i++) {
+//            low = Math.min(low,prices[i]);
+//            res = Math.max(res,prices[i]-low);
+//        }
+//        return res;
+//    }
+//}
+
 
 /**
  * 337.打家劫舍Ⅲ
  * 树形DP
  */
 
-class Solution {
-    public int rob(TreeNode root) {
-        if(root == null) return 0;
-        int[] res = robAction(root);
-        return Math.max(res[0],res[1]);
-    }
-    //每个节点传递信息(抢的最大值/不抢的最大值)
-    private int[] robAction(TreeNode root) {
-        int[] res = new int[2];//由于只需要返回传/不传的信息，所以是int[2];
-        if(root == null) return res;
-        //保证遍历整个树
-        int[] left = robAction(root.left);
-        int[] right = robAction(root.right);
-
-        //不抢的情况，上一个节点可以抢，也可以不抢劫
-        int notRob = Math.max(left[0],left[1]) + Math.max(right[0],right[1]);
-        //抢的情况(如果我要抢了，左右子树肯定不能抢，不然违反原则了)
-        int rob =  root.val + left[0] + right[0];
-
-        return new int[]{notRob,rob};
-    }
-}
+//class Solution {
+//    public int rob(TreeNode root) {
+//        if(root == null) return 0;
+//        int[] res = robAction(root);
+//        return Math.max(res[0],res[1]);
+//    }
+//    //每个节点传递信息(抢的最大值/不抢的最大值)
+//    private int[] robAction(TreeNode root) {
+//        int[] res = new int[2];//由于只需要返回传/不传的信息，所以是int[2];
+//        if(root == null) return res;
+//        //保证遍历整个树
+//        int[] left = robAction(root.left);
+//        int[] right = robAction(root.right);
+//
+//        //不抢的情况，上一个节点可以抢，也可以不抢劫
+//        int notRob = Math.max(left[0],left[1]) + Math.max(right[0],right[1]);
+//        //抢的情况(如果我要抢了，左右子树肯定不能抢，不然违反原则了)
+//        int rob =  root.val + left[0] + right[0];
+//
+//        return new int[]{notRob,rob};
+//    }
+//}
 
 
 
