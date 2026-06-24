@@ -9,6 +9,74 @@ import java.util.*;
  * 股票问题
  */
 
+/**
+ * 714.买卖股票的最佳时机 含手续费
+ */
+
+class Solution {
+    public int maxProfit(int[] prices, int fee) {
+        if(prices == null || prices.length == 0) return 0;
+        int[] dp = new int[2];
+        dp[0] = -prices[0];
+        for(int i = 1; i < prices.length; i++) {
+            dp[0] = Math.max(dp[0],dp[1] - prices[i]);
+            dp[1] = Math.max(dp[1],dp[0] + prices[i] - fee);
+        }
+        return dp[1];
+    }
+}
+
+
+/**
+ * 309.买股票的最佳问题（含冻结期）
+ */
+
+//class Solution {
+//    public int maxProfit(int[] prices) {
+//        if(prices == null || prices.length == 0) return 0;
+//        //一共四种状态，0.闲置状态(必须和冻结期作出区分) 1.买入 2.卖出  3.冻结期
+//        int[] dp = new int[4];
+//        dp[1] = -prices[0];
+//        for(int i = 1; i < prices.length; i++) {
+//            //因为本题有中间状态值，所以数据计算依赖于上一阶段值（也就是说不能买完就直接卖出）
+//            int temp1 = dp[1];
+//            int temp2 = dp[2];
+//            dp[0] = Math.max(dp[0],dp[3]);//闲置状态的最大值取决于上一阶段的限制值和冻结期(已解冻)
+//            dp[1] = Math.max(dp[1],dp[0] - prices[i]);
+//            dp[2] = temp1 + prices[i];
+//            dp[3] = temp2;
+//        }
+//        return Math.max(dp[0],Math.max(dp[2],dp[3]));
+//    }
+//}
+
+
+
+
+/**
+ * 188.买股票的最佳问题Ⅳ
+ * 最多可以完成K比交易
+ */
+
+//class Solution {
+//    public int maxProfit(int k, int[] prices) {
+//        if(prices == null || prices.length == 0) return 0;
+//        //这题本身用多维数组难以实例化，直接采用一维数组
+//        int[] dp =  new int[2*k+1];//为了方便计算，我们直接舍弃掉dp[0];
+//        for(int i = 1; i < 2*k+1; i++) {
+//            if( (i-1) % 2 == 0) dp[i] = -prices[0];
+//        }
+//        for(int i = 1; i < prices.length; i++) {
+//            for(int j = 1; j <= k; j++) {
+//                //dp[2*j-1] == buy_j;
+//                dp[2*j-1] = Math.max(dp[2*j-1],dp[2*(j-1)]-prices[i]);
+//                dp[2*j] = Math.max( dp[2*j],dp[2*j-1]+prices[i]);//sellJ = buyJ + prices[i];
+//            }
+//        }
+//        return dp[2*k];
+//    }
+//}
+
 
 /**
  * 123.买股票的最佳时机Ⅲ
@@ -17,26 +85,22 @@ import java.util.*;
  * 注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）
  */
 
+//一维数组优化
+//class Solution {
+//    public int maxProfit(int[] prices) {
+//        if(prices == null || prices.length < 2) return 0;
+//        int[] dp = new int[4];//一共只需要存储四种状态，直接在原数组上迭代
+//        dp[0] = -prices[0]; dp[2] = -prices[0];
+//        for(int i : prices) {
+//            dp[0] = Math.max(dp[0],-i);
+//            dp[1] = Math.max(dp[1],dp[0] + i);
+//            dp[2] = Math.max(dp[2],dp[1] - i);
+//            dp[3] = Math.max(dp[3],dp[2] + i);
+//        }
+//        return dp[3];
+//    }
+//}
 
-
-/**
- *123.买股票的最佳时机Ⅱ
- */
-
-class Solution {
-    public int maxProfit(int[] prices) {
-        if(prices == null || prices.length < 2) return 0;
-        int[] dp = new int[4];//一共只需要存储四种状态，直接在原数组上迭代
-        dp[0] = -prices[0]; dp[2] = -prices[0];
-        for(int i : prices) {
-            dp[0] = Math.max(dp[0],-i);
-            dp[1] = Math.max(dp[1],dp[0] + i);
-            dp[2] = Math.max(dp[2],dp[1] - i);
-            dp[3] = Math.max(dp[3],dp[2] + i);
-        }
-        return dp[3];
-    }
-}
 
 
 //
