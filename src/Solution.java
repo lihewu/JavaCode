@@ -6,6 +6,96 @@ import java.util.*;
  */
 
 /**
+ * 子序列问题
+ */
+
+
+/**
+ * 718.最长公共子序列
+ */
+
+class Solution {
+    public int findLength(int[] nums1, int[] nums2) {
+        if(nums1 == null || nums2 == null) return 0;
+        int[] dp = new int[nums2.length+1];
+        for(int i = 1; i < nums1.length;i++) {
+            for(int j = )
+        }
+    }
+}
+
+
+//借助二维数组
+//class Solution {
+//    public int findLength(int[] nums1, int[] nums2) {
+//        if(nums1 == null || nums2 == null) return 0;
+//        int[][] dp = new int[nums1.length+1][nums1.length+1];
+//        int res = 0;
+//        for(int i = 1; i <= nums1.length;i++) {
+//            for(int j = 1; j <= nums2.length; j++) {
+//                if(nums1[i-1] == nums2[j-1]) {//判断前面两个子序列是否相等
+//                    dp[i][j] = dp[i-1][j-1]+1;
+//                }
+//                res = Math.max(dp[i][j],res);
+//            }
+//        }
+//        return res;
+//    }
+//}
+
+
+
+/**
+ * 300.最长子序列长度(不要求连续)
+ */
+
+//class Solution {
+//    public int lengthOfLIS(int[] nums) {
+//        if(nums.length <= 1) return nums.length;
+//        int[] dp = new int[nums.length];
+//        Arrays.fill(dp,1);
+//        int res = 1;
+//        //站在终点望前方
+//        for(int i = 1; i < nums.length; i++) {//i表示当前子序列的终点
+//            for(int j = 0; j < i; j++) {
+//                if(nums[i] > nums[j]) //如果终点>当前终点前序列遍历到的节点
+//                    dp[i] = Math.max(dp[i],dp[j]+1);
+//            }
+//            res = Math.max(dp[i],res);
+//        }
+//        return res;
+//    }
+//}
+
+
+
+/**
+ * 674.最长连续子序列(要求连续)
+ */
+
+
+//class Solution {
+//    public int findLengthOfLCIS(int[] nums) {
+//        if(nums == null || nums.length == 0) return 0;
+//        //dp[0]表示历史最大的自序长，dp[1]表示当前连续长度
+//        int[] dp = new int[2];
+//        dp[0] = 1; dp[1] = 1;
+//        for(int i = 1; i < nums.length; i++) {
+//            if(nums[i] > nums[i-1]) dp[1]++;
+//            else dp[1] = 1;
+//            dp[0] = Math.max(dp[0],dp[1]);
+//        }
+//        return dp[0];
+//    }
+//}
+
+
+
+
+
+
+
+/**
  * 股票问题
  */
 
@@ -13,18 +103,18 @@ import java.util.*;
  * 714.买卖股票的最佳时机 含手续费
  */
 
-class Solution {
-    public int maxProfit(int[] prices, int fee) {
-        if(prices == null || prices.length == 0) return 0;
-        int[] dp = new int[2];
-        dp[0] = -prices[0];
-        for(int i = 1; i < prices.length; i++) {
-            dp[0] = Math.max(dp[0],dp[1] - prices[i]);
-            dp[1] = Math.max(dp[1],dp[0] + prices[i] - fee);
-        }
-        return dp[1];
-    }
-}
+//class Solution {
+//    public int maxProfit(int[] prices, int fee) {
+//        if(prices == null || prices.length == 0) return 0;
+//        int[] dp = new int[2];
+//        dp[0] = -prices[0];
+//        for(int i = 1; i < prices.length; i++) {
+//            dp[0] = Math.max(dp[0],dp[1] - prices[i]);
+//            dp[1] = Math.max(dp[1],dp[0] + prices[i] - fee);
+//        }
+//        return dp[1];
+//    }
+//}
 
 
 /**
