@@ -11,18 +11,135 @@ import java.util.*;
 
 
 /**
+ * 392.判断子序列
+ * 给定字符串 s 和 t ，判断 s 是否为 t 的子序列。（例如，"ace"是"abcde"的一个子序列，而"aec"不是）。
+ */
+
+
+class Solution {
+    public boolean isSubsequence(String s, String t) {
+        if(s == null || t == null) return true;
+        char[] s1 = s.toCharArray();
+        char[] s2 = t.toCharArray();
+        boolean[][] dp = new boolean[s1.length+1][s2.length+1];
+        //当i为0时，即s1为空串时，必然为true（初始化没true，一辈子都没true啊）
+        for(int i = 0; i <= s2.length; i++) {
+            dp[0][i] = true;
+        }
+        for(int i = 1; i <= s1.length; i++) {
+            for(int j = 1; j <= s2.length; j++) {
+                if(s1[i-1] == s2[j-1])
+                    dp[i][j] = dp[i-1][j-1];
+                else
+                    dp[i][j] = dp[i][j-1];
+            }
+        }
+        return dp[s1.length][s2.length];
+    }
+}
+
+
+
+/**
+ * 53.最大子数组和
+ */
+
+//class Solution {
+//    public int maxSubArray(int[] nums) {
+//        if(nums == null || nums.length == 0) return 0;
+//        int preSum = nums[0];
+//        int max = nums[0];
+//        for(int i = 1; i < nums.length; i++) {
+//            preSum = Math.max(nums[i],preSum+nums[i]);
+//            max = Math.max(max,preSum);
+//        }
+//        return max;
+//    }
+//}
+
+//class Solution {
+//    public int maxSubArray(int[] nums) {
+//        if(nums == null || nums.length == 0) return 0;
+//        int max = Integer.MIN_VALUE;
+//        int sum = 0;
+//        for(int i : nums) {
+//            sum += i;
+//            if(sum > max)//当前和已经比max大，一定需要更新max
+//                max = Math.max(sum,max);//当前的sum还是之前的max
+//            if(sum < 0)
+//                sum = 0;
+//        }
+//        return max;
+//    }
+//}
+
+
+//class Solution {
+//    public int maxSubArray(int[] nums) {
+//        if(nums == null || nums.length == 0) return 0;
+//        int max = Integer.MIN_VALUE;
+//        int sum = 0;
+//        for(int i = 0; i < nums.length; i++) {
+//            sum += nums[i];
+//            if(sum > max) max = sum;
+//            //贪心算法的核心:如果sum已经<0，说明前面的累加已经无意义，该丢弃的丢弃
+//            if(sum < 0) sum = 0;
+//        }
+//        return max;
+//    }
+//}
+
+
+/**
+ *1035.不相交的线
+ */
+
+
+//class Solution {
+//    public int maxUncrossedLines(int[] nums1, int[] nums2) {
+//        if(nums1 == null || nums2 == null) return 0;
+//        int[][] dp = new int[nums1.length+1][nums2.length+1];
+//        for(int i = 1; i <= nums1.length; i++) {
+//            for(int j = 1; j <= nums2.length; j++) {
+//                if(nums1[i-1] == nums2[j-1])
+//                    dp[i][j] = dp[i-1][j-1] + 1;
+//                else
+//                    dp[i][j] = Math.max(dp[i][j-1],dp[i-1][j]);
+//            }
+//        }
+//        return dp[nums1.length][nums2.length];
+//    }
+//}
+
+
+/**
+ * 1143.最长公共子序列
+ */
+
+
+//class Solution {
+//    public int longestCommonSubsequence(String text1, String text2) {
+//        if(text1 == null || text2 == null) return 0;
+//        int[][] dp = new int[text1.length()+1][text2.length()+1];
+//        char[] s1 = text1.toCharArray();
+//        char[] s2 = text2.toCharArray();
+//        for(int i = 1; i <= s1.length; i++) {
+//            for(int j = 1; j <= s2.length; j++) {
+//                if(s2[j-1] == s1[i-1])
+//                    dp[i][j] = dp[i-1][j-1]+1;
+//                else
+//                    dp[i][j] = Math.max(dp[i][j-1],dp[i-1][j]);
+//            }
+//        }
+//        return dp[s1.length][s2.length];
+//    }
+//}
+
+
+/**
  * 718.最长公共子序列
  */
 
-class Solution {
-    public int findLength(int[] nums1, int[] nums2) {
-        if(nums1 == null || nums2 == null) return 0;
-        int[] dp = new int[nums2.length+1];
-        for(int i = 1; i < nums1.length;i++) {
-            for(int j = )
-        }
-    }
-}
 
 
 //借助二维数组
