@@ -11,32 +11,124 @@ import java.util.*;
 
 
 /**
- * 392.判断子序列
- * 给定字符串 s 和 t ，判断 s 是否为 t 的子序列。（例如，"ace"是"abcde"的一个子序列，而"aec"不是）。
+ * 72.编辑距离
+ * 给你两个单词 word1 和 word2， 请返回将 word1 转换成 word2 所使用的最少操作数
+ * 你可以对一个单词进行如下三种操作：
+ * 插入一个字符
+ * 删除一个字符
+ * 替换一个字符
  */
 
-
 class Solution {
-    public boolean isSubsequence(String s, String t) {
-        if(s == null || t == null) return true;
-        char[] s1 = s.toCharArray();
-        char[] s2 = t.toCharArray();
-        boolean[][] dp = new boolean[s1.length+1][s2.length+1];
-        //当i为0时，即s1为空串时，必然为true（初始化没true，一辈子都没true啊）
-        for(int i = 0; i <= s2.length; i++) {
-            dp[0][i] = true;
+    public int minDistance(String word1, String word2) {
+        if(word1 == null) return word2.length();
+        if(word2 == null) return word1.length();
+        char[] s1 = word1.toCharArray();
+        char[] s2 = word2.toCharArray();
+        int[][] dp = new int[s1.length+1][s2.length+1];
+        //注意初始化操作
+        for(int i = 0; i <= s1.length; i++) {//如果要把word1的前i个字符变为空串，需要进行i次操作
+            dp[i][0] = i;
         }
+        for(int j = 0; j <= s2.length; j++) {//同理，把word2的前j个字符变为空串，需要进行j次操作
+            dp[0][j] = j;
+        }
+
         for(int i = 1; i <= s1.length; i++) {
             for(int j = 1; j <= s2.length; j++) {
-                if(s1[i-1] == s2[j-1])
+                if(s1[i-1] == s2[j-1])//如果相同了，则不需要改变
                     dp[i][j] = dp[i-1][j-1];
-                else
-                    dp[i][j] = dp[i][j-1];
+                else {//如果不相同，那就要看看是增删还是改
+                    dp[i][j] = Math.min(dp[i-1][j-1],Math.min(dp[i-1][j],dp[i][j-1]))+1;
+                }
             }
         }
         return dp[s1.length][s2.length];
     }
 }
+
+
+
+/**
+ * 583.两个字符串的删除操作
+ */
+
+//class Solution {
+//    public int minDistance(String word1, String word2) {
+//        if(word1 == null) return word2.length();
+//        if(word2 == null) return word1.length();
+//        char[] s1 = word1.toCharArray();
+//        char[] s2 = word2.toCharArray();
+//        int[][] dp = new int[s1.length+1][s2.length+1];
+//        for(int i = 1; i <= s1.length; i++) {
+//            for(int j  = 1; j <= s2.length; j++) {
+//                if(s1[i-1] == s2[j-1])
+//                    dp[i][j] = dp[i-1][j-1]+1;
+//                else
+//                    dp[i][j] = Math.max(dp[i][j-1],dp[i-1][j]);
+//            }
+//        }
+//        return s1.length + s2.length - 2*dp[s1.length][s2.length];
+//    }
+//}
+
+
+/**
+ * 115.不同的子序列
+ * 返回在 s 的 子序列 中 t 出现的个数
+ */
+
+//class Solution {
+//    public int numDistinct(String s, String t) {
+//        if(s == null) return 0;
+//        int[][] dp = new int[s.length()+1][t.length()+1];
+//        char[] s1 = s.toCharArray();
+//        char[] s2 = t.toCharArray();
+//        for(int i = 0; i <= s.length(); i++) {//如果t为null，依旧所有都为真
+//            dp[i][0] = 1;
+//        }
+//
+//        for(int i = 1; i <= s.length(); i++) {
+//            for(int j = 1; j <= t.length(); j++) {
+//                if(s1[i-1] == s2[j-1]) {
+//                    dp[i][j] = dp[i-1][j-1] + dp[i-1][j];
+//                }else {
+//                    dp[i][j] = dp[i-1][j];
+//                }
+//            }
+//        }
+//        return dp[s.length()][t.length()];
+//    }
+//}
+
+
+/**
+ * 392.判断子序列
+ * 给定字符串 s 和 t ，判断 s 是否为 t 的子序列。（例如，"ace"是"abcde"的一个子序列，而"aec"不是）。
+ */
+
+
+//class Solution {
+//    public boolean isSubsequence(String s, String t) {
+//        if(s == null || t == null) return true;
+//        char[] s1 = s.toCharArray();
+//        char[] s2 = t.toCharArray();
+//        boolean[][] dp = new boolean[s1.length+1][s2.length+1];
+//        //当i为0时，即s1为空串时，必然为true（初始化没true，一辈子都没true啊）
+//        for(int i = 0; i <= s2.length; i++) {
+//            dp[0][i] = true;
+//        }
+//        for(int i = 1; i <= s1.length; i++) {
+//            for(int j = 1; j <= s2.length; j++) {
+//                if(s1[i-1] == s2[j-1])
+//                    dp[i][j] = dp[i-1][j-1];
+//                else
+//                    dp[i][j] = dp[i][j-1];
+//            }
+//        }
+//        return dp[s1.length][s2.length];
+//    }
+//}
 
 
 
