@@ -11,6 +11,112 @@ import java.util.*;
 
 
 /**
+ * 516.最长回文子序列(区分回文子串)
+ * 子序列定义为：不改变剩余字符顺序的情况下，删除某些字符或者不删除任何字符形成的一个序列。
+ */
+
+class Solution {
+    public int longestPalindromeSubseq(String s) {
+        if(s == null || s.isEmpty()) return 0;
+        int n = s.length();
+        int[][] dp = new int[n][n];//dp[i][j]含义:s[i] ~ s[j]的回文子序列长度
+        for(int i = n-1; i >= 0; i--) {
+            //初始化:字符串本身也是回文子序列
+            dp[i][i] = 1;
+            for(int j = i + 1; j < n; j++) {
+                if(s.charAt(i) == s.charAt(j)) {
+                    dp[i][j] = dp[i+1][j-1] + 2;//子序列长是加首尾
+                }else {
+                    dp[i][j] = Math.max(dp[i+1][j],dp[i][j-1]);//如果不相同，各退一步
+                }
+            }
+        }
+        return dp[0][n-1];
+    }
+}
+
+
+
+
+
+/**
+ * 647.回文子串
+ */
+
+
+////中心扩散法
+//class Solution {
+//    public int countSubstrings(String s) {
+//        if(s == null || s.isEmpty()) return 0;
+//        int totalCount = 0;
+//        for(int i = 0; i < s.length(); i++) {
+//            totalCount += extend(s,i,i);//对于奇数点
+//            totalCount += extend(s,i,i+1);//双数点的缝隙
+//        }
+//        return totalCount;
+//    }
+//    private int extend(String str,int left,int right){//记录向两边扩散是否为回文
+//        char[] s = str.toCharArray();
+//        int subCount = 0;
+//        while(left >= 0 && right < str.length() && s[left] == s[right]){//当左右边界合法且首尾相等时，为回文字符串
+//            subCount++;
+//            left--;right++;//中心向外扩散
+//        }
+//        return subCount;
+//    }
+//}
+
+//class Solution {
+//    public int countSubstrings(String s) {
+//        if(s == null) return 0;
+//        char[] str = s.toCharArray();
+//        boolean[][] dp = new boolean[str.length][str.length];
+//        int count = 0;
+//        for(int i = s.length()-1; i >= 0; i--) {
+//            for(int j = i; j < s.length(); j++) {
+//                if(str[i] == str[j]) {//如果首尾相等
+//                    if(j-i < 2) dp[i][j] = true;
+//                    else dp[i][j] = dp[i+1][j-1];
+//                }else dp[i][j] = false;
+//                if(dp[i][j]) count++;
+//            }
+//        }
+//        return count;
+//    }
+//}
+
+
+/**
+ * 5.最长回文字符串
+ */
+
+//class Solution {
+//    public String longestPalindrome(String s) {
+//        if(s == null) return null;
+//        char[] ch = s.toCharArray();
+//        int max = 1;int startPos = 0; int endPos = 0;
+//        boolean[][] dp = new boolean[ch.length][ch.length];//dp仅用来判断是否为回文
+//        for(int i = ch.length-1; i >=0; i--) {
+//            for(int j = i; j < ch.length; j++) {
+//                if(ch[i] == ch[j]) {//如果首尾相等
+//                    if(j-i < 2) dp[i][j] = true;
+//                    else dp[i][j] = dp[i+1][j-1];
+//                }else dp[i][j] = false;
+//                if(dp[i][j] && (j-i+1) > max) {//只有当前为回文，判断长度才有意义
+//                    startPos = i;
+//                    endPos = j;
+//                    max = j-i+1;
+//                }
+//            }
+//        }
+//        return s.substring(startPos,endPos+1);
+//    }
+//}
+
+
+
+
+/**
  * 72.编辑距离
  * 给你两个单词 word1 和 word2， 请返回将 word1 转换成 word2 所使用的最少操作数
  * 你可以对一个单词进行如下三种操作：
@@ -19,33 +125,33 @@ import java.util.*;
  * 替换一个字符
  */
 
-class Solution {
-    public int minDistance(String word1, String word2) {
-        if(word1 == null) return word2.length();
-        if(word2 == null) return word1.length();
-        char[] s1 = word1.toCharArray();
-        char[] s2 = word2.toCharArray();
-        int[][] dp = new int[s1.length+1][s2.length+1];
-        //注意初始化操作
-        for(int i = 0; i <= s1.length; i++) {//如果要把word1的前i个字符变为空串，需要进行i次操作
-            dp[i][0] = i;
-        }
-        for(int j = 0; j <= s2.length; j++) {//同理，把word2的前j个字符变为空串，需要进行j次操作
-            dp[0][j] = j;
-        }
-
-        for(int i = 1; i <= s1.length; i++) {
-            for(int j = 1; j <= s2.length; j++) {
-                if(s1[i-1] == s2[j-1])//如果相同了，则不需要改变
-                    dp[i][j] = dp[i-1][j-1];
-                else {//如果不相同，那就要看看是增删还是改
-                    dp[i][j] = Math.min(dp[i-1][j-1],Math.min(dp[i-1][j],dp[i][j-1]))+1;
-                }
-            }
-        }
-        return dp[s1.length][s2.length];
-    }
-}
+//class Solution {
+//    public int minDistance(String word1, String word2) {
+//        if(word1 == null) return word2.length();
+//        if(word2 == null) return word1.length();
+//        char[] s1 = word1.toCharArray();
+//        char[] s2 = word2.toCharArray();
+//        int[][] dp = new int[s1.length+1][s2.length+1];
+//        //注意初始化操作
+//        for(int i = 0; i <= s1.length; i++) {//如果要把word1的前i个字符变为空串，需要进行i次操作
+//            dp[i][0] = i;
+//        }
+//        for(int j = 0; j <= s2.length; j++) {//同理，把word2的前j个字符变为空串，需要进行j次操作
+//            dp[0][j] = j;
+//        }
+//
+//        for(int i = 1; i <= s1.length; i++) {
+//            for(int j = 1; j <= s2.length; j++) {
+//                if(s1[i-1] == s2[j-1])//如果相同了，则不需要改变
+//                    dp[i][j] = dp[i-1][j-1];
+//                else {//如果不相同，那就要看看是增删还是改
+//                    dp[i][j] = Math.min(dp[i-1][j-1],Math.min(dp[i-1][j],dp[i][j-1]))+1;
+//                }
+//            }
+//        }
+//        return dp[s1.length][s2.length];
+//    }
+//}
 
 
 
