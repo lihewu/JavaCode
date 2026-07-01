@@ -1,6 +1,103 @@
 import java.util.*;
 //import java.util.Stack;//最垃圾的类，没有之一
 
+//单调栈
+
+
+/**
+ * 503.下一个更大的数
+ * 给定一个循环数组 nums （ nums[nums.length - 1] 的下一个元素是 nums[0] ），返回 nums 中每个元素的 下一个更大元素 。
+ *
+ * 数字 x 的 下一个更大的元素 是按数组遍历顺序，这个数字之后的第一个比它更大的数，这意味着你应该循环地搜索它的下一个更大的数。如果不存在，则输出 -1
+ */
+
+
+//class Solution {
+//    public int[] nextGreaterElements(int[] nums) {
+//        if(nums == null || nums.length == 0) return new int[0];
+//        int len = nums.length;
+//        int[] res = new int[len];
+//        Arrays.fill(res,-1);
+//        Deque<Integer> stack = new ArrayDeque<>();
+//        for(int i = 0; i < 2*len; i++) {//遍历两轮，一定是可以保证循环最大(保证每个数都能与整个数组进行比较)
+//            while(!stack.isEmpty() && nums[i % len] > nums[stack.peek()]) {
+//                int preIndex = stack.pop();
+//                res[preIndex] = nums[i % len];
+//            }
+//            stack.push(i % len);
+//        }
+//        return res;
+//    }
+//}
+
+
+
+/**
+ * 496.下一个更大的数 Ⅰ
+ * nums1 中数字 x 的 下一个更大元素 是指 x 在 nums2 中对应位置 右侧 的 第一个 比 x 大的元素。
+ * 给你两个 没有重复元素 的数组 nums1 和 nums2 ，下标从 0 开始计数，其中nums1 是 nums2 的子集。
+ * 对于每个 0 <= i < nums1.length ，找出满足 nums1[i] == nums2[j] 的下标 j ，
+ * 并且在 nums2 确定 nums2[j] 的 下一个更大元素 。如果不存在下一个更大元素，那么本次查询的答案是 -1 。
+ * 返回一个长度为 nums1.length 的数组 ans 作为答案，满足 ans[i] 是如上所述的 下一个更大元素
+ */
+
+
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        if(nums1 == null || nums2 == null) return new int[0];
+        int n1 = nums1.length;
+        int n2 = nums2.length;
+        HashMap<Integer,Integer> map = new HashMap<>();//Key-Value值 = data-index
+        for(int i = 0; i < n1; i++) {//把nums1所有要返回的数全部放入到map中
+            map.put(nums1[i],i);
+        }
+        int[] res = new int[n1];
+        Arrays.fill(res,-1);
+        Deque<Integer> stack = new ArrayDeque<>();
+        for(int i = 0; i < n2; i++) {
+            while(!stack.isEmpty() && nums2[i] > nums2[stack.peek()]) {//如果当前栈不为空，且找到了一个更大值
+                int preIndex = stack.pop();//用preIndex记录这个较小值的Index
+                if(map.containsKey(nums2[preIndex])) {//如果nums1包含这个较小值
+                    res[map.get(nums2[preIndex])] = nums2[i];//根据Map记录的值-index，传入这个更大数
+                }
+            }
+            stack.push(i);
+        }
+        return res;
+    }
+}
+
+
+
+/**
+ * 739.每日温度
+ * 给定一个整数数组 temperatures ，表示每天的温度，返回一个数组 answer
+ * 其中 answer[i] 是指对于第 i 天，下一个更高温度出现在几天后。如果气温在这之后都不会升高，请在该位置用 0 来代替。
+ */
+
+
+//class Solution {
+//    public int[] dailyTemperatures(int[] temperatures) {
+//        if(temperatures == null || temperatures.length == 0) return new int[0];
+//
+//        int len = temperatures.length;
+//        int[] res = new int[len];
+//        Deque<Integer> stack = new ArrayDeque<>();
+//        for(int i = 0; i < len; i++) {
+//            while(!stack.isEmpty() && temperatures[i] > temperatures[stack.peek()]) {//如果栈非空，且当前温度较大
+//                int preIndex = stack.pop();
+//                res[preIndex] = i - preIndex;
+//            }
+//            stack.push(i);//栈为空，或者栈顶元素更大
+//        }
+//        return res;
+//    }
+
+
+
+
+
+
 /**
  * oh yeah开启我的DP时间
  */
@@ -14,26 +111,26 @@ import java.util.*;
  * 516.最长回文子序列(区分回文子串)
  * 子序列定义为：不改变剩余字符顺序的情况下，删除某些字符或者不删除任何字符形成的一个序列。
  */
-
-class Solution {
-    public int longestPalindromeSubseq(String s) {
-        if(s == null || s.isEmpty()) return 0;
-        int n = s.length();
-        int[][] dp = new int[n][n];//dp[i][j]含义:s[i] ~ s[j]的回文子序列长度
-        for(int i = n-1; i >= 0; i--) {
-            //初始化:字符串本身也是回文子序列
-            dp[i][i] = 1;
-            for(int j = i + 1; j < n; j++) {
-                if(s.charAt(i) == s.charAt(j)) {
-                    dp[i][j] = dp[i+1][j-1] + 2;//子序列长是加首尾
-                }else {
-                    dp[i][j] = Math.max(dp[i+1][j],dp[i][j-1]);//如果不相同，各退一步
-                }
-            }
-        }
-        return dp[0][n-1];
-    }
-}
+//
+//class Solution {
+//    public int longestPalindromeSubseq(String s) {
+//        if(s == null || s.isEmpty()) return 0;
+//        int n = s.length();
+//        int[][] dp = new int[n][n];//dp[i][j]含义:s[i] ~ s[j]的回文子序列长度
+//        for(int i = n-1; i >= 0; i--) {
+//            //初始化:字符串本身也是回文子序列
+//            dp[i][i] = 1;
+//            for(int j = i + 1; j < n; j++) {
+//                if(s.charAt(i) == s.charAt(j)) {
+//                    dp[i][j] = dp[i+1][j-1] + 2;//子序列长是加首尾
+//                }else {
+//                    dp[i][j] = Math.max(dp[i+1][j],dp[i][j-1]);//如果不相同，各退一步
+//                }
+//            }
+//        }
+//        return dp[0][n-1];
+//    }
+//}
 
 
 
