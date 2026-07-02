@@ -5,6 +5,110 @@ import java.util.*;
 
 
 /**
+ * 84.柱形图的最大面积
+ */
+
+
+//单调栈解法
+
+
+
+
+
+
+//class Solution {
+//    public int largestRectangleArea(int[] heights) {
+//        if(heights == null || heights.length == 0) return 0;
+//        int n = heights.length;
+//        int[] minLeftIndex = new int[n];
+//        int[] minRightIndex = new int[n];
+//        minLeftIndex[0] = -1;
+//        //先找到当前下标对应的左侧第一更小柱
+//        for(int i = 1; i < n; i++) {
+//            int temp = i-1;
+//            //向左遍历(借助minLeftIndex本身遍历，比temp--更快;因为比当前temp更小的左侧一定是minLeftIndex(temp）)
+//            while(temp >= 0 && heights[temp] >= heights[i]) temp = minLeftIndex[temp];
+//            //此时，要不index = -1;要不就记录的左侧第一个更小的index
+//            minLeftIndex[i] = temp;
+//        }
+//        minRightIndex[n-1] = n;
+//        for(int i = n-2; i >= 0; i--) {
+//            int temp = i+1;
+//            while(temp < n && heights[temp] >= heights[i]) temp = minRightIndex[temp];
+//            minRightIndex[i] = temp;
+//        }
+//
+//        int res = 0;
+//        for(int i = 0; i < n; i++) {
+//            int sum = heights[i] * (minRightIndex[i] - minLeftIndex[i] - 1);
+//            res = Math.max(res,sum);
+//        }
+//        return res;
+//    }
+//}
+
+
+/**
+ * 42.接雨水
+ */
+
+
+
+////双指针优化:
+//class Solution {
+//    public int trap(int[] height) {
+//        if(height == null || height.length <= 1) return 0;
+//        int n = height.length;
+//        int maxLeft = height[0]; int maxRight = height[n-1];
+//        int left = 1; int right = n-2;
+//        int sum = 0;
+//        while(left <= right) {
+//            //左右开弓,记录当前的最大值左右边界值
+//            maxLeft = Math.max(maxLeft,height[left]);
+//            maxRight = Math.max(maxRight,height[right]);
+//            //当出现差值时:收缩较小的一侧
+//            if(maxLeft < maxRight) {
+//                sum += maxLeft - height[left++];
+//            }else {
+//                sum += maxRight - height[right--];
+//            }
+//        }
+//        return sum;
+//    }
+//}
+
+
+
+
+////双指针法:
+//class Solution {
+//    public int trap(int[] height) {
+//        if(height == null || height.length <= 1) return 0;
+//        int n = height.length;
+//        //记录每个版本的左右最高长度
+//        int[] leftHeight = new int[n];
+//        int[] rightHeight = new int[n];
+//        leftHeight[0] = height[0];
+//        for(int i = 1; i < n; i++) {
+//            leftHeight[i] = Math.max(height[i],leftHeight[i-1]);
+//        }
+//        rightHeight[n-1] = height[n-1];
+//        for(int i = n-2; i>=0; i--) {
+//            rightHeight[i] = Math.max(height[i],rightHeight[i+1]);
+//        }
+//
+//        int sum = 0;
+//        for(int i = 0; i < n; i++) {
+//            int min = Math.min(leftHeight[i], rightHeight[i]);
+//            if(height[i] < min) sum += min-height[i];
+//        }
+//        return sum;
+//    }
+//}
+
+
+
+/**
  * 503.下一个更大的数
  * 给定一个循环数组 nums （ nums[nums.length - 1] 的下一个元素是 nums[0] ），返回 nums 中每个元素的 下一个更大元素 。
  *
@@ -42,30 +146,30 @@ import java.util.*;
  */
 
 
-class Solution {
-    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
-        if(nums1 == null || nums2 == null) return new int[0];
-        int n1 = nums1.length;
-        int n2 = nums2.length;
-        HashMap<Integer,Integer> map = new HashMap<>();//Key-Value值 = data-index
-        for(int i = 0; i < n1; i++) {//把nums1所有要返回的数全部放入到map中
-            map.put(nums1[i],i);
-        }
-        int[] res = new int[n1];
-        Arrays.fill(res,-1);
-        Deque<Integer> stack = new ArrayDeque<>();
-        for(int i = 0; i < n2; i++) {
-            while(!stack.isEmpty() && nums2[i] > nums2[stack.peek()]) {//如果当前栈不为空，且找到了一个更大值
-                int preIndex = stack.pop();//用preIndex记录这个较小值的Index
-                if(map.containsKey(nums2[preIndex])) {//如果nums1包含这个较小值
-                    res[map.get(nums2[preIndex])] = nums2[i];//根据Map记录的值-index，传入这个更大数
-                }
-            }
-            stack.push(i);
-        }
-        return res;
-    }
-}
+//class Solution {
+//    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+//        if(nums1 == null || nums2 == null) return new int[0];
+//        int n1 = nums1.length;
+//        int n2 = nums2.length;
+//        HashMap<Integer,Integer> map = new HashMap<>();//Key-Value值 = data-index
+//        for(int i = 0; i < n1; i++) {//把nums1所有要返回的数全部放入到map中
+//            map.put(nums1[i],i);
+//        }
+//        int[] res = new int[n1];
+//        Arrays.fill(res,-1);
+//        Deque<Integer> stack = new ArrayDeque<>();
+//        for(int i = 0; i < n2; i++) {
+//            while(!stack.isEmpty() && nums2[i] > nums2[stack.peek()]) {//如果当前栈不为空，且找到了一个更大值
+//                int preIndex = stack.pop();//用preIndex记录这个较小值的Index
+//                if(map.containsKey(nums2[preIndex])) {//如果nums1包含这个较小值
+//                    res[map.get(nums2[preIndex])] = nums2[i];//根据Map记录的值-index，传入这个更大数
+//                }
+//            }
+//            stack.push(i);
+//        }
+//        return res;
+//    }
+//}
 
 
 
