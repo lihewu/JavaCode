@@ -1,8 +1,58 @@
 import java.util.*;
 //import java.util.Stack;//最垃圾的类，没有之一
 
-//单调栈
+//leetcode-hot 100
 
+/**
+ * 49.字母异位词分组
+ */
+
+
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String,List<String>> map = new HashMap();//建立 Char-List的类型
+        for(int i = 0; i < strs.length; i++) {
+            char[] ch = strs[i].toCharArray();//将字符串转化为字符数组
+            Arrays.sort(ch);//不再逐个进行比较，而是排序后进行匹配
+            String str = new String(ch);
+            if(map.containsKey(str)) {
+                map.get(str).add(strs[i]);
+            }else {
+                List<String> list = new ArrayList<>();
+                list.add(strs[i]);
+                map.put(str,list);
+            }
+        }
+        return new ArrayList<>(map.values());
+    }
+}
+
+
+
+/**
+ * 1.两数之和（Hash）
+ */
+
+//class Solution {
+//    public int[] twoSum(int[] nums, int target) {
+//        if(nums == null || nums.length == 0) return new int[0];
+//        Map<Integer,Integer> map = new HashMap<>();
+//        int[] res = new int[2];
+//        for(int i = 0; i < nums.length; i++) {
+//            if(map.containsKey(target - nums[i])) {
+//                res[0] = i;
+//                res[1] = map.get(target - nums[i]);
+//                return res;
+//            }
+//            map.put(nums[i],i);
+//        }
+//        return new int[2];
+//    }
+//}
+
+
+
+//单调栈——代码随想录完结~~~
 
 /**
  * 84.柱形图的最大面积
@@ -10,10 +60,6 @@ import java.util.*;
 
 
 //单调栈解法
-
-
-
-
 
 
 //class Solution {
