@@ -3,29 +3,57 @@ import java.util.*;
 
 //leetcode-hot 100
 
+//Part01——哈希
+
+/**
+ * 128.最长连续子序列
+ */
+
+
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        //舍弃掉从头遍历，改用set
+        Set<Integer> set = new HashSet<>();
+        for(int i : nums) set.add(i);
+        int maxLen = 0;
+        for(int i : set) {//这里不可遍历nums，当出现重复数据时会回退到0(n^2)
+            if(set.contains(i-1)) continue;//如果i-1存在，说明不为序列头
+            int len = 0;
+            int curNum = i;
+            while(set.contains(curNum++)) {//如果i-1不存在，则为序列头，开始遍历set
+                maxLen = Math.max(maxLen,++len);
+            }
+        }
+        return maxLen;
+    }
+}
+
+
+
+
 /**
  * 49.字母异位词分组
  */
 
 
-class Solution {
-    public List<List<String>> groupAnagrams(String[] strs) {
-        Map<String,List<String>> map = new HashMap();//建立 Char-List的类型
-        for(int i = 0; i < strs.length; i++) {
-            char[] ch = strs[i].toCharArray();//将字符串转化为字符数组
-            Arrays.sort(ch);//不再逐个进行比较，而是排序后进行匹配
-            String str = new String(ch);
-            if(map.containsKey(str)) {
-                map.get(str).add(strs[i]);
-            }else {
-                List<String> list = new ArrayList<>();
-                list.add(strs[i]);
-                map.put(str,list);
-            }
-        }
-        return new ArrayList<>(map.values());
-    }
-}
+//class Solution {
+//    public List<List<String>> groupAnagrams(String[] strs) {
+//        Map<String,List<String>> map = new HashMap();//建立 Char-List的类型
+//        for(int i = 0; i < strs.length; i++) {
+//            char[] ch = strs[i].toCharArray();//将字符串转化为字符数组
+//            Arrays.sort(ch);//不再逐个进行比较，而是排序后进行匹配
+//            String str = new String(ch);
+//            if(map.containsKey(str)) {
+//                map.get(str).add(strs[i]);
+//            }else {
+//                List<String> list = new ArrayList<>();
+//                list.add(strs[i]);
+//                map.put(str,list);
+//            }
+//        }
+//        return new ArrayList<>(map.values());
+//    }
+//}
 
 
 
