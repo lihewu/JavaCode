@@ -3,6 +3,33 @@ import java.util.*;
 
 //leetcode-hot 100
 
+//Part02-双指针
+
+/**
+ * 283.移动零
+ */
+
+class Solution {
+    public void moveZeroes(int[] nums) {
+        if(nums == null || nums.length == 0) return;
+        int slow = 0;
+        int fast = 0;
+        while (fast < nums.length) {//用于发现非0元素
+            if(nums[fast] != 0) {
+                int temp = nums[slow];
+                nums[slow] = nums[fast];
+                nums[fast] = temp;
+                slow++;
+            }
+            fast++;
+        }
+    }
+}
+
+
+
+
+
 //Part01——哈希
 
 /**
@@ -10,23 +37,23 @@ import java.util.*;
  */
 
 
-class Solution {
-    public int longestConsecutive(int[] nums) {
-        //舍弃掉从头遍历，改用set
-        Set<Integer> set = new HashSet<>();
-        for(int i : nums) set.add(i);
-        int maxLen = 0;
-        for(int i : set) {//这里不可遍历nums，当出现重复数据时会回退到0(n^2)
-            if(set.contains(i-1)) continue;//如果i-1存在，说明不为序列头
-            int len = 0;
-            int curNum = i;
-            while(set.contains(curNum++)) {//如果i-1不存在，则为序列头，开始遍历set
-                maxLen = Math.max(maxLen,++len);
-            }
-        }
-        return maxLen;
-    }
-}
+//class Solution {
+//    public int longestConsecutive(int[] nums) {
+//        //舍弃掉从头遍历，改用set
+//        Set<Integer> set = new HashSet<>();
+//        for(int i : nums) set.add(i);
+//        int maxLen = 0;
+//        for(int i : set) {//这里不可遍历nums，当出现重复数据时会回退到0(n^2)
+//            if(set.contains(i-1)) continue;//如果i-1存在，说明不为序列头
+//            int len = 0;
+//            int curNum = i;
+//            while(set.contains(curNum++)) {//如果i-1不存在，则为序列头，开始遍历set
+//                maxLen = Math.max(maxLen,++len);
+//            }
+//        }
+//        return maxLen;
+//    }
+//}
 
 
 
