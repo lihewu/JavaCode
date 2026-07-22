@@ -6,25 +6,79 @@ import java.util.*;
 //Part02-双指针
 
 /**
- * 283.移动零
+ * 42.接雨水
  */
 
 class Solution {
-    public void moveZeroes(int[] nums) {
-        if(nums == null || nums.length == 0) return;
-        int slow = 0;
-        int fast = 0;
-        while (fast < nums.length) {//用于发现非0元素
-            if(nums[fast] != 0) {
-                int temp = nums[slow];
-                nums[slow] = nums[fast];
-                nums[fast] = temp;
-                slow++;
+    public int trap(int[] height) {
+        if(height == null || height.length == 0) return 0;
+        int n = height.length;
+        //利用双指针
+        int left = 0; int right = n;
+        int maxLeftHeight = height[0];
+        int maxRightHeight = height[n-1];
+        int sum = 0;
+        left++; right--;
+        while(left <= right) {
+            maxLeftHeight = Math.max(maxLeftHeight,height[left]);
+            maxRightHeight = Math.max(maxRightHeight,height[right]);
+            if(maxLeftHeight < maxRightHeight) {
+                sum += maxLeftHeight - height[left];
+                left++;
             }
-            fast++;
+            else {
+                sum += maxRightHeight - height[right];
+                right--;
+            }
         }
+        return sum;
     }
 }
+
+
+////双指针优化:
+//class Solution {
+//    public int trap(int[] height) {
+//        if(height == null || height.length <= 1) return 0;
+//        int n = height.length;
+//        int maxLeft = height[0]; int maxRight = height[n-1];
+//        int left = 1; int right = n-2;
+//        int sum = 0;
+//        while(left <= right) {
+//            //左右开弓,记录当前的最大值左右边界值
+//            maxLeft = Math.max(maxLeft,height[left]);
+//            maxRight = Math.max(maxRight,height[right]);
+//            //当出现差值时:收缩较小的一侧
+//            if(maxLeft < maxRight) {
+//                sum += maxLeft - height[left++];
+//            }else {
+//                sum += maxRight - height[right--];
+//            }
+//        }
+//        return sum;
+//    }
+//}
+
+/**
+ * 283.移动零
+ */
+
+//class Solution {
+//    public void moveZeroes(int[] nums) {
+//        if(nums == null || nums.length == 0) return;
+//        int slow = 0;
+//        int fast = 0;
+//        while (fast < nums.length) {//用于发现非0元素
+//            if(nums[fast] != 0) {
+//                int temp = nums[slow];
+//                nums[slow] = nums[fast];
+//                nums[fast] = temp;
+//                slow++;
+//            }
+//            fast++;
+//        }
+//    }
+//}
 
 
 
