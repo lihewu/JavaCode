@@ -3,37 +3,66 @@ import java.util.*;
 
 //leetcode-hot 100
 
+//Part03-滑动窗口
+
+/**
+ * 3.无重复字符的最长字串
+ */
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        if(s == null) return 0;
+        char[] ch = s.toCharArray();
+        //用HashMap存储重复元素最后一次出现的下标
+        HashMap<Character,Integer> map = new HashMap<>();//K-V = char-lastIndex
+        int max = 0;
+        int right = 0;
+        int left = 0;
+        while(right < ch.length) {//滑动窗口的结束位置
+            if(map.containsKey(ch[right])) {//如果当前元素以及包含在滑动窗口中
+                //left指针必须向前，绝不能向后移动！！！
+                left = Math.max(left,map.get(ch[right])+1);
+            }
+            max = Math.max(max,right-left+1);//max的值一定是放在外面(否则无法解决无重复数组)
+            map.put(ch[right],right);
+            right++;
+        }
+        return max;
+    }
+}
+
+
 //Part02-双指针
 
 /**
  * 42.接雨水
  */
 
-class Solution {
-    public int trap(int[] height) {
-        if(height == null || height.length == 0) return 0;
-        int n = height.length;
-        //利用双指针
-        int left = 0; int right = n;
-        int maxLeftHeight = height[0];
-        int maxRightHeight = height[n-1];
-        int sum = 0;
-        left++; right--;
-        while(left <= right) {
-            maxLeftHeight = Math.max(maxLeftHeight,height[left]);
-            maxRightHeight = Math.max(maxRightHeight,height[right]);
-            if(maxLeftHeight < maxRightHeight) {
-                sum += maxLeftHeight - height[left];
-                left++;
-            }
-            else {
-                sum += maxRightHeight - height[right];
-                right--;
-            }
-        }
-        return sum;
-    }
-}
+//class Solution {
+//    public int trap(int[] height) {
+//        if(height == null || height.length == 0) return 0;
+//        int n = height.length;
+//        //利用双指针
+//        int left = 0; int right = n;
+//        int maxLeftHeight = height[0];
+//        int maxRightHeight = height[n-1];
+//        int sum = 0;
+//        left++; right--;
+//        while(left <= right) {
+//            maxLeftHeight = Math.max(maxLeftHeight,height[left]);
+//            maxRightHeight = Math.max(maxRightHeight,height[right]);
+//            if(maxLeftHeight < maxRightHeight) {
+//                sum += maxLeftHeight - height[left];
+//                left++;
+//            }
+//            else {
+//                sum += maxRightHeight - height[right];
+//                right--;
+//            }
+//        }
+//        return sum;
+//    }
+//}
 
 
 ////双指针优化:
