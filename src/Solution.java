@@ -5,31 +5,156 @@ import java.util.*;
 
 //Part03-滑动窗口
 
+//49.字母异位词
+
+//class Solution {
+//    public List<List<String>> groupAnagrams(String[] strs) {
+//        if(strs == null || strs.length == 0) return new ArrayList<>();
+//        Map<String,List<String>> map = new HashMap<>();//K-V:str-list
+//        for(int i = 0; i < strs.length; i++) {
+//            char[] ch = strs[i].toCharArray();
+//            Arrays.sort(ch);//先把每个str进行排序
+//            String str = new String(ch);//将字符数组转为字符串
+//            if(map.containsKey(str)) {
+//                map.get(str).add(strs[i]);
+//            }else {
+//                List<String> list = new ArrayList<>();
+//                list.add(strs[i]);
+//                map.put(str,list);
+//            }
+//        }
+//        return new ArrayList<>(map.values());
+//    }
+//}
+
+
+//class Solution {
+//    public List<List<String>> groupAnagrams(String[] strs) {
+//        Map<String,List<String>> map = new HashMap();//建立 Char-List的类型
+//        for(int i = 0; i < strs.length; i++) {
+//            char[] ch = strs[i].toCharArray();//将字符串转化为字符数组
+//            Arrays.sort(ch);//不再逐个进行比较，而是排序后进行匹配
+//            String str = new String(ch);
+//            if(map.containsKey(str)) {
+//                map.get(str).add(strs[i]);
+//            }else {
+//                List<String> list = new ArrayList<>();
+//                list.add(strs[i]);
+//                map.put(str,list);
+//            }
+//        }
+//        return new ArrayList<>(map.values());
+//    }
+//}
+
+/**
+ * 438.找到字符串中所有异位词
+ * 题目要求在字符串 `s` 里找 `p` 的异位词
+ */
+
+//单数组差异值维护
+
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> resList = new ArrayList<>();
+        int sLen = s.length();  int pLen = p.length();
+        if(sLen < pLen) return resList;
+        //先记录初始count数值
+        int[] count = new int[26];
+        char[] pChar = p.toCharArray();
+        char[] sChar = s.toCharArray();
+        for(int i = 0; i < pLen; i++) {//主串窗口有则加，目标串有则减
+            count[sChar[i] - 'a']++;
+            count[pChar[i] - 'a']--;
+        }
+        //记录diff数组
+        int diff = 0;
+        for(int i : count) {
+            if(i != 0) diff++;//diff用来记录count中 = 0 的元素个数
+        }
+        if(diff == 0) resList.add(0);//如果初始状态diff为0，说明起始位置匹配
+        //对主串s进行滑动窗口
+        int left = 0;
+        for(int right = pLen; right < sLen; right++) {
+            //确定修改那两个元素
+            int leftChar = sChar[left] - 'a';
+            int rightChar = sChar[right] - 'a';
+            //根据修改的count值进行diff判断
+            if(count[leftChar] == 1) diff--;
+            if(count[leftChar] == 0) diff++;
+            count[leftChar]--;left++;
+            if(count[rightChar] == -1) diff--;
+            if(count[rightChar] == 0) diff++;
+            count[rightChar]++;
+            if(diff == 0) resList.add(left);
+        }
+        return resList;
+    }
+}
+
+
+
+//class Solution {
+//    public List<Integer> findAnagrams(String s, String p) {
+//        if(s == null) return new ArrayList<>();
+//        int sLen = s.length();
+//        int pLen = p.length();
+//        if(sLen < pLen) return new ArrayList<>();//如果s比p还短，直接返回
+//        List<Integer> resList = new ArrayList<>();
+//        //分别用数组记录s的滑动窗口和子串p对应的26个字母个数
+//        int[] sCount = new int[26];
+//        int[] pCount = new int[26];
+//        char[] ch = p.toCharArray();
+//        //先确定p串的字母情况
+//        for(int i = 0; i < pLen; i++) {
+//            pCount[ch[i] - 'a']++;
+//        }
+//        //再用滑动窗口确定s的异位词
+//        char[] sChar = s.toCharArray();
+//        int left = 0;
+//        for(int right = 0; right < sLen; right++) {//right负责向右扩张
+//            //右指针扩张
+//            sCount[sChar[right] - 'a']++;
+//            //先判断有没有超过窗口值
+//            if( (right - left + 1) > pLen) {
+//                sCount[sChar[left] - 'a']--;
+//                left++;
+//            }
+//            //判断是否相等
+//            if( (right - left + 1) == pLen) {
+//                if(Arrays.equals(sCount, pCount)) resList.add(left);
+//            }
+//        }
+//        return resList;
+//    }
+//}
+
+
 /**
  * 3.无重复字符的最长字串
  */
 
-class Solution {
-    public int lengthOfLongestSubstring(String s) {
-        if(s == null) return 0;
-        char[] ch = s.toCharArray();
-        //用HashMap存储重复元素最后一次出现的下标
-        HashMap<Character,Integer> map = new HashMap<>();//K-V = char-lastIndex
-        int max = 0;
-        int right = 0;
-        int left = 0;
-        while(right < ch.length) {//滑动窗口的结束位置
-            if(map.containsKey(ch[right])) {//如果当前元素以及包含在滑动窗口中
-                //left指针必须向前，绝不能向后移动！！！
-                left = Math.max(left,map.get(ch[right])+1);
-            }
-            max = Math.max(max,right-left+1);//max的值一定是放在外面(否则无法解决无重复数组)
-            map.put(ch[right],right);
-            right++;
-        }
-        return max;
-    }
-}
+//class Solution {
+//    public int lengthOfLongestSubstring(String s) {
+//        if(s == null) return 0;
+//        char[] ch = s.toCharArray();
+//        //用HashMap存储重复元素最后一次出现的下标
+//        HashMap<Character,Integer> map = new HashMap<>();//K-V = char-lastIndex
+//        int max = 0;
+//        int right = 0;
+//        int left = 0;
+//        while(right < ch.length) {//滑动窗口的结束位置
+//            if(map.containsKey(ch[right])) {//如果当前元素以及包含在滑动窗口中
+//                //left指针必须向前，绝不能向后移动！！！
+//                left = Math.max(left,map.get(ch[right])+1);
+//            }
+//            max = Math.max(max,right-left+1);//max的值一定是放在外面(否则无法解决无重复数组)
+//            map.put(ch[right],right);
+//            right++;
+//        }
+//        return max;
+//    }
+//}
 
 
 //Part02-双指针
