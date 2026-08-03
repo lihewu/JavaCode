@@ -3,6 +3,35 @@ import java.util.*;
 
 //leetcode-hot 100
 
+//Part04-子串问题
+
+/**
+ * 560. 和为 K 的子数组
+ */
+
+
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        if(nums == null || nums.length == 0) return  0;
+        int count = 0;
+        int sum = 0;
+        int preIndex = 0;//记录先前位置的index
+        //K-V : num-count 记录对应前缀和的可能次数
+        Map<Integer,Integer> map = new HashMap<>();
+        //
+        map.put(0,1);//必须预先记录好一条 恰等于k值时，有一次(可以处理负数情况)
+        for(int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            if(map.containsKey(sum - k)) {
+                count += map.get(sum - k);//添加对应的次数
+            }
+            map.put(sum,map.getOrDefault(sum,0) + 1);
+        }
+        return count;
+    }
+}
+
+
 //Part03-滑动窗口
 
 //49.字母异位词
@@ -54,43 +83,43 @@ import java.util.*;
 
 //单数组差异值维护
 
-class Solution {
-    public List<Integer> findAnagrams(String s, String p) {
-        List<Integer> resList = new ArrayList<>();
-        int sLen = s.length();  int pLen = p.length();
-        if(sLen < pLen) return resList;
-        //先记录初始count数值
-        int[] count = new int[26];
-        char[] pChar = p.toCharArray();
-        char[] sChar = s.toCharArray();
-        for(int i = 0; i < pLen; i++) {//主串窗口有则加，目标串有则减
-            count[sChar[i] - 'a']++;
-            count[pChar[i] - 'a']--;
-        }
-        //记录diff数组
-        int diff = 0;
-        for(int i : count) {
-            if(i != 0) diff++;//diff用来记录count中 = 0 的元素个数
-        }
-        if(diff == 0) resList.add(0);//如果初始状态diff为0，说明起始位置匹配
-        //对主串s进行滑动窗口
-        int left = 0;
-        for(int right = pLen; right < sLen; right++) {
-            //确定修改那两个元素
-            int leftChar = sChar[left] - 'a';
-            int rightChar = sChar[right] - 'a';
-            //根据修改的count值进行diff判断
-            if(count[leftChar] == 1) diff--;
-            if(count[leftChar] == 0) diff++;
-            count[leftChar]--;left++;
-            if(count[rightChar] == -1) diff--;
-            if(count[rightChar] == 0) diff++;
-            count[rightChar]++;
-            if(diff == 0) resList.add(left);
-        }
-        return resList;
-    }
-}
+//class Solution {
+//    public List<Integer> findAnagrams(String s, String p) {
+//        List<Integer> resList = new ArrayList<>();
+//        int sLen = s.length();  int pLen = p.length();
+//        if(sLen < pLen) return resList;
+//        //先记录初始count数值
+//        int[] count = new int[26];
+//        char[] pChar = p.toCharArray();
+//        char[] sChar = s.toCharArray();
+//        for(int i = 0; i < pLen; i++) {//主串窗口有则加，目标串有则减
+//            count[sChar[i] - 'a']++;
+//            count[pChar[i] - 'a']--;
+//        }
+//        //记录diff数组
+//        int diff = 0;
+//        for(int i : count) {
+//            if(i != 0) diff++;//diff用来记录count中 = 0 的元素个数
+//        }
+//        if(diff == 0) resList.add(0);//如果初始状态diff为0，说明起始位置匹配
+//        //对主串s进行滑动窗口
+//        int left = 0;
+//        for(int right = pLen; right < sLen; right++) {
+//            //确定修改那两个元素
+//            int leftChar = sChar[left] - 'a';
+//            int rightChar = sChar[right] - 'a';
+//            //根据修改的count值进行diff判断
+//            if(count[leftChar] == 1) diff--;
+//            if(count[leftChar] == 0) diff++;
+//            count[leftChar]--;left++;
+//            if(count[rightChar] == -1) diff--;
+//            if(count[rightChar] == 0) diff++;
+//            count[rightChar]++;
+//            if(diff == 0) resList.add(left);
+//        }
+//        return resList;
+//    }
+//}
 
 
 
