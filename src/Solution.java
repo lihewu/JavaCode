@@ -15,10 +15,8 @@ class Solution {
         if(nums == null || nums.length == 0) return  0;
         int count = 0;
         int sum = 0;
-        int preIndex = 0;//记录先前位置的index
         //K-V : num-count 记录对应前缀和的可能次数
         Map<Integer,Integer> map = new HashMap<>();
-        //
         map.put(0,1);//必须预先记录好一条 恰等于k值时，有一次(可以处理负数情况)
         for(int i = 0; i < nums.length; i++) {
             sum += nums[i];
