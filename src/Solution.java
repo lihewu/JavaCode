@@ -5,29 +5,62 @@ import java.util.*;
 
 //Part04-子串问题
 
+
+/**
+ * 239. 滑动窗口最大值
+ */
+
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if(nums == null || nums.length == 0) return new int[0];
+        int[] res = new int[nums.length - k + 1];
+        int index = 0;//记录当前滑动窗口的起始位置
+        //单调队列(存储下标位置-因为要判断是否超出滑动窗口的边界值)
+        Deque<Integer> deque = new ArrayDeque<>();
+        for(int i = 0; i < nums.length; i++) {
+            //1.优化掉没有用的老员工(比最新值还小，拿说明他一定不是最大值)
+            while(!deque.isEmpty() && nums[i] > nums[deque.peekLast()]) {//tips:这里deque内存储的是数组，不是值
+                deque.removeLast();
+            }
+            //2.入职新员工
+            deque.addLast(i);
+            //3.滑动窗口超过边界值，需要淘汰掉老东西
+            if(i+1 - deque.element() > k) {
+                deque.removeFirst();
+            }
+            //4.记录当前窗口的最大值
+            if(i >= k-1) {//只有总长度 >= k才能确认值
+                res[index++] = nums[deque.peekFirst()];
+            }
+        }
+        return res;
+    }
+}
+
+
 /**
  * 560. 和为 K 的子数组
  */
 
 
-class Solution {
-    public int subarraySum(int[] nums, int k) {
-        if(nums == null || nums.length == 0) return  0;
-        int count = 0;
-        int sum = 0;
-        //K-V : num-count 记录对应前缀和的可能次数
-        Map<Integer,Integer> map = new HashMap<>();
-        map.put(0,1);//必须预先记录好一条 恰等于k值时，有一次(可以处理负数情况)
-        for(int i = 0; i < nums.length; i++) {
-            sum += nums[i];
-            if(map.containsKey(sum - k)) {
-                count += map.get(sum - k);//添加对应的次数
-            }
-            map.put(sum,map.getOrDefault(sum,0) + 1);
-        }
-        return count;
-    }
-}
+//class Solution {
+//    public int subarraySum(int[] nums, int k) {
+//        if(nums == null || nums.length == 0) return  0;
+//        int count = 0;
+//        int sum = 0;
+//        //K-V : num-count 记录对应前缀和的可能次数
+//        Map<Integer,Integer> map = new HashMap<>();
+//        map.put(0,1);//必须预先记录好一条 恰等于k值时，有一次(可以处理负数情况)
+//        for(int i = 0; i < nums.length; i++) {
+//            sum += nums[i];
+//            if(map.containsKey(sum - k)) {
+//                count += map.get(sum - k);//添加对应的次数
+//            }
+//            map.put(sum,map.getOrDefault(sum,0) + 1);
+//        }
+//        return count;
+//    }
+//}
 
 
 //Part03-滑动窗口
