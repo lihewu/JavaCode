@@ -9,24 +9,60 @@ import java.util.*;
  */
 
 /**
+ * 56. 合并区间
+ */
+
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        if(intervals == null || intervals[0].length == 0) return new int[0][];
+
+        //将每个区域存储到list中(因为不确定有多少个区域)
+        List<int[]> resList = new ArrayList<>();
+        Arrays.sort(intervals,Comparator.comparingInt(a -> a[0]));
+        int start = intervals[0][0];
+        int end = intervals[0][1];
+        for(int i = 1; i < intervals.length; i++) {
+            if(intervals[i][0] > end) {
+                //如果下一个区域的起始区域 > 上一个区域的结束区域，则分块
+                int[] list = {start,end};
+                resList.add(list);
+                start = intervals[i][0];
+                end = intervals[i][1];
+            }else {
+                end = Math.max(end,intervals[i][1]);
+            }
+        }
+        //最后会剩下一个区域没有被添加
+        resList.add(new int[]{start,end});
+//        int[][] res = new int[resList.size()][];
+//        for(int i = 0; i < resList.size(); i++) {
+//            res[i] = resList.get(i);
+//        }
+        return resList.toArray(new int[resList.size()][]);
+    }
+}
+
+
+
+/**
  *53. 最大子数组和
  * 给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
  * 子数组是数组中的一个连续部分
  */
 
-class Solution {
-    public int maxSubArray(int[] nums) {
-        if(nums == null || nums.length == 0) return 0;
-        int max = nums[0];
-        int preSum = nums[0];
-        for(int i = 1; i < nums.length; i++) {
-            //判断preSum是否为整数
-            preSum = Math.max(nums[i],preSum + nums[i]);
-            max = Math.max(preSum,max);
-        }
-        return max;
-    }
-}
+//class Solution {
+//    public int maxSubArray(int[] nums) {
+//        if(nums == null || nums.length == 0) return 0;
+//        int max = nums[0];
+//        int preSum = nums[0];
+//        for(int i = 1; i < nums.length; i++) {
+//            //判断preSum是否为整数
+//            preSum = Math.max(nums[i],preSum + nums[i]);
+//            max = Math.max(preSum,max);
+//        }
+//        return max;
+//    }
+//}
 
 
 //Part04-子串问题
