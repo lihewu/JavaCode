@@ -3,6 +3,32 @@ import java.util.*;
 
 //leetcode-hot 100
 
+
+/**
+ * Part05.数组
+ */
+
+/**
+ *53. 最大子数组和
+ * 给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+ * 子数组是数组中的一个连续部分
+ */
+
+class Solution {
+    public int maxSubArray(int[] nums) {
+        if(nums == null || nums.length == 0) return 0;
+        int max = nums[0];
+        int preSum = nums[0];
+        for(int i = 1; i < nums.length; i++) {
+            //判断preSum是否为整数
+            preSum = Math.max(nums[i],preSum + nums[i]);
+            max = Math.max(preSum,max);
+        }
+        return max;
+    }
+}
+
+
 //Part04-子串问题
 
 /**
